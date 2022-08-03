@@ -59,13 +59,13 @@ namespace DevOpsCLI
             //    }
             //}
 
-            for (int i = 0; i < 1000; i++)
+            for (int i = 0; i < 50; i++)
             {
                 Console.WriteLine(i);
                 System.Threading.Thread.SpinWait(10000000);
             }
 
-            Console.WriteLine("\nDone - press any key to exit\n");
+            Console.WriteLine("\nDone - press any key to exit");
             Timer.Stop();
         }
 
