@@ -29,5 +29,5 @@ Follow these steps to get to automating Azure DevOps
 9. If a long return string is printed, then Azure CLI is all set up!
 
 ## Automation
-- Download and use the [included .exe]() for the automation available currently in this repo
+- Download and use the [included .exe](https://github.com/bradmartin333/DevOpsCLI/raw/master/DevOpsCLI/bin/Release/DevOpsCLI.exe) for the automation available currently in this repo
 - Clone the repo and tinker as needed with the aid of the Azure CLI docs online
