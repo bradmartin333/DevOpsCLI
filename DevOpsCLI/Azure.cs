@@ -8,15 +8,27 @@ namespace DevOpsCLI
     public class Azure
     {
         public static readonly List<string> Names = new List<string>();
+        public static readonly List<string> Areas = new List<string>();
+        public static readonly List<string> AreaIDs = new List<string>();
 
-        public static string CreateWorkItem(string assignee, string title, string type, string project)
+        public static string CreateWorkItem(string assignee, string title, string type, string project, string area, string storyPoints = null)
         {
+            string arg = $"az boards work-item create " +
+                         $"--title \\\"{title}\\\" " +
+                         $"--type \\\"{type}\\\" " +
+                         $"--assigned-to \\\"{assignee}\\\" " +
+                         $"--project \\\"{project}\\\" " +
+                         $"--reason \\\"New\\\" " +
+                         $"--fields \\\"Area ID={area}\\\" " +
+                         $"{(string.IsNullOrEmpty(storyPoints) ? "" : $"\\\"Story Points={storyPoints}\\\"")} " +
+                         $"--output tsv";
+
             var proc = new Process
             {
                 StartInfo = new ProcessStartInfo
                 {
                     FileName = @"C:\Windows\system32\WindowsPowerShell\v1.0\powershell.exe",
-                    Arguments = $"az boards work-item create --title \\\"{title}\\\" --type \\\"{type}\\\" --assigned-to \\\"{assignee}\\\" --project \\\"{project}\\\" --reason \\\"New\\\" --output tsv",
+                    Arguments = arg,
                     UseShellExecute = false,
                     RedirectStandardOutput = true,
                     CreateNoWindow = true,
@@ -104,18 +116,56 @@ namespace DevOpsCLI
                 }
             };
 
-            proc.OutputDataReceived += Proc_OutputDataReceived; // Async gather names
+            proc.OutputDataReceived += NameDataReceived; // Async gather names
             proc.Start();
             proc.BeginOutputReadLine();
             proc.WaitForExit();
         }
 
-        private static void Proc_OutputDataReceived(object sender, DataReceivedEventArgs e)
+        private static void NameDataReceived(object sender, DataReceivedEventArgs e)
         {
             if (e.Data != null && e.Data.Contains("displayName"))
             {
                 string name = e.Data.Split('\"')[3]; // Assumes consistent output
                 if (!Names.Contains(name)) Names.Add(name); // One way to have no duplicates
+            }
+        }
+
+        public static void GetAreas(string project)
+        {
+            var proc = new Process
+            {
+                StartInfo = new ProcessStartInfo
+                {
+                    FileName = @"C:\Windows\system32\WindowsPowerShell\v1.0\powershell.exe",
+                    Arguments = $"az boards area project list --project {project}",
+                    UseShellExecute = false,
+                    RedirectStandardOutput = true,
+                    CreateNoWindow = true,
+                    WorkingDirectory = @"C:\",
+                }
+            };
+
+            proc.OutputDataReceived += AreaDataReceived; // Async gather areas
+            proc.Start();
+            proc.BeginOutputReadLine();
+            proc.WaitForExit();
+        }
+
+        private static void AreaDataReceived(object sender, DataReceivedEventArgs e)
+        {
+            if (e.Data != null)
+            {
+                if (e.Data.Contains("path"))
+                {
+                    string area = e.Data.Split('\"')[3]; // Assumes consistent output
+                    if (!Areas.Contains(area)) Areas.Add(area); // One way to have no duplicates
+                }
+                else if (e.Data.Contains("\"id\""))
+                {
+                    string id = e.Data.Split(' ').Last().Replace(",", ""); // Assumes consistent output
+                    if (!AreaIDs.Contains(id)) AreaIDs.Add(id); // One way to have no duplicates
+                }
             }
         }
     }

@@ -14,7 +14,7 @@ namespace DevOpsCLI
         private static readonly System.Timers.Timer Timer = new System.Timers.Timer(5000); // Give user 5 second delay to cancel
         private static readonly List<string> NewIDs = new List<string>();
         private static CancellationTokenSource TokenSource;
-        private static string UserName, UserStoryTitle;
+        private static string UserName, UserStoryTitle, StoryPoints, Area;
         private static string[] TaskTitles;
 
         [STAThread]
@@ -25,6 +25,8 @@ namespace DevOpsCLI
             Console.WriteLine("Software DevOps Generator v0.1\n");
             Console.WriteLine("Fetching names...");
             Azure.GetNames();
+            Console.WriteLine("Fetching project areas...");
+            Azure.GetAreas(Project);
 
             while (true)
             {
@@ -32,13 +34,15 @@ namespace DevOpsCLI
                 TokenSource = new CancellationTokenSource();
 
                 //using (UserEntry userEntry = new UserEntry(new string[] { "debug" }))
-                using (UserEntry userEntry = new UserEntry(Azure.Names.ToArray()))
+                using (UserEntry userEntry = new UserEntry())
                 {
                     DialogResult result = userEntry.ShowDialog();
                     if (result == DialogResult.OK)
                     {
                         UserName = userEntry.UserName;
                         UserStoryTitle = userEntry.UserStoryTitle;
+                        StoryPoints = userEntry.StoryPoints;
+                        Area = Azure.AreaIDs[Azure.Areas.IndexOf(userEntry.Area)];
                         TaskTitles = userEntry.TaskTitles.ToList().Where(x => !string.IsNullOrEmpty(x)).ToArray();
                     }
                     else
@@ -46,7 +50,7 @@ namespace DevOpsCLI
                 }
 
                 Console.WriteLine($"\nCreating a user story for {UserName} named {UserStoryTitle}");
-                Console.WriteLine($"in the Software project{(TaskTitles.Length > 0 ? $" with {TaskTitles.Length} custom titled child tasks" : "")}");
+                Console.WriteLine($"in the {Project} project{(TaskTitles.Length > 0 ? $" with {TaskTitles.Length} custom titled child tasks" : "")}");
                 Console.WriteLine($"\nPress any key to cancel");
 
                 Timer.Start();
@@ -96,11 +100,11 @@ namespace DevOpsCLI
             Task Task = Task.Factory.StartNew(() =>
             {
                 if (token.IsCancellationRequested) return;
-                string userStoryID = Azure.CreateWorkItem(UserName, UserStoryTitle, "User Story", Project);
+                string userStoryID = Azure.CreateWorkItem(UserName, UserStoryTitle, "User Story", Project, Area, StoryPoints);
                 Console.WriteLine($"Created User Story {userStoryID}");
                 if (string.IsNullOrEmpty(userStoryID))
                 {
-                    Console.WriteLine("Failed to create user story\nCancelling...");
+                    Console.WriteLine("Failed to create user story\nCancelling...\nPress any key to continue");
                     return;
                 }
                 NewIDs.Add(userStoryID);
@@ -108,7 +112,7 @@ namespace DevOpsCLI
                 for (int i = 0; i < TaskTitles.Length; i++)
                 {
                     if (token.IsCancellationRequested) return;
-                    string taskID = Azure.CreateWorkItem(UserName, TaskTitles[i], "Task", Project);
+                    string taskID = Azure.CreateWorkItem(UserName, TaskTitles[i], "Task", Project, Area);
                     if (string.IsNullOrEmpty(taskID))
                     {
                         Console.WriteLine("Failed to create user story\nCancelling...");

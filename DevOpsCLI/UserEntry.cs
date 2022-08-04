@@ -8,14 +8,18 @@ namespace DevOpsCLI
     {
         public string UserName { get; internal set; }
         public string UserStoryTitle { get; internal set; }
+        public string Area { get; set; }
+        public string StoryPoints { get; internal set; }
         public string[] TaskTitles { get; internal set; } = new string[5];
-        private readonly string[] Names;
+        private readonly string[] Names, Areas;
 
-        public UserEntry(string[] names)
+        public UserEntry()
         {
             InitializeComponent();
-            Names = names;
+            Names = Azure.Names.ToArray();
             ComboNames.Items.AddRange(Names);
+            Areas = Azure.Areas.ToArray();
+            ComboAreas.Items.AddRange(Areas);
             LoadSettings();
         }
 
@@ -45,6 +49,18 @@ namespace DevOpsCLI
                     return;
             }
 
+            if (!Areas.ToList().Contains(ComboAreas.Text))
+            {
+                DialogResult result1 = MessageBox.Show("Area not valid", "DevOpsCLI", MessageBoxButtons.OKCancel);
+                if (result1 == DialogResult.Cancel)
+                {
+                    DialogResult = DialogResult.Cancel;
+                    return;
+                }
+                else
+                    return;
+            }
+
             int taskIdx = 0;
             foreach (TextBox textBox in TLP.Controls.OfType<TextBox>())
             {
@@ -57,6 +73,8 @@ namespace DevOpsCLI
             
             UserName = ComboNames.Text;
             UserStoryTitle = TextTitle.Text;
+            Area = ComboAreas.Text;
+            StoryPoints = NumStoryPoints.Value.ToString();
             SaveSettings();
             DialogResult = DialogResult.OK;
             Close();
