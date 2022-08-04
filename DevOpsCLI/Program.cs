@@ -67,7 +67,7 @@ namespace DevOpsCLI
                 if (NewIDs.Count > 0) Console.WriteLine($"{NewIDs.Count} new IDs have been created.");
                 Console.WriteLine("Press 'r' to run again");
                 Console.WriteLine("Press 'd' to delete any newly created IDs and run again");
-                Console.WriteLine($"Press 's' to export grouped story points for the {Project} project");
+                Console.WriteLine($"Press 's' to view grouped story points for the active sprints in the {Project} project");
                 Console.WriteLine("Press any other key to quit");
 
                 ConsoleKeyInfo input = Console.ReadKey();
