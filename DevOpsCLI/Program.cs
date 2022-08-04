@@ -67,6 +67,7 @@ namespace DevOpsCLI
                 if (NewIDs.Count > 0) Console.WriteLine($"{NewIDs.Count} new IDs have been created.");
                 Console.WriteLine("Press 'r' to run again");
                 Console.WriteLine("Press 'd' to delete any newly created IDs and run again");
+                Console.WriteLine($"Press 's' to export grouped story points for the {Project} project");
                 Console.WriteLine("Press any other key to quit");
 
                 ConsoleKeyInfo input = Console.ReadKey();
@@ -87,6 +88,31 @@ namespace DevOpsCLI
                                 deleteCount += Azure.DeleteWorkItem(id, Project);
                             Console.WriteLine($"Deleted {deleteCount} items\n");
                         }
+                        break;
+                    case 's':
+                        Console.WriteLine("Fetching data...\n");
+                        Azure.StoryPoints();
+                        int padSize = Azure.StoryPointDict.Select(x => x.Key.Length).Max() + 2;
+                        bool toggleColor = false;
+                        foreach (KeyValuePair<string, int> item in Azure.StoryPointDict)
+                        {
+                            if (toggleColor)
+                            {
+                                Console.ForegroundColor = ConsoleColor.Black;
+                                Console.BackgroundColor = ConsoleColor.White;
+                            }
+                            else
+                                Console.ResetColor();
+                            Console.Write($"{item.Key.PadRight(padSize)}\t{item.Value,-5}");
+                            for (int i = 0; i < item.Value; i++)
+                                Console.Write("*");
+                            Console.WriteLine();
+                            toggleColor = !toggleColor;
+                        }
+                        Console.ResetColor();
+                        Console.WriteLine("\nPress any key to restart");
+                        Console.ReadKey();
+                        Console.WriteLine("\n");
                         break;
                     default:
                         return;
