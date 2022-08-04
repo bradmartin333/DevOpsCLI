@@ -18,7 +18,10 @@ namespace DevOpsCLI
             GetNames();
             Console.WriteLine("Awaiting user input...");
 
-            string userName, userStoryTitle, sprintNum; // Get these from the dialog
+            // Get these from the dialog
+            string userName, userStoryTitle, sprintNum;
+            string[] taskTitles;
+
             using (UserEntry userEntry = new UserEntry(Names.ToArray()))
             {
                 DialogResult result = userEntry.ShowDialog();
@@ -27,13 +30,13 @@ namespace DevOpsCLI
                     userName = userEntry.UserName;
                     userStoryTitle = userEntry.UserStoryTitle;
                     sprintNum = userEntry.SprintNum;
+                    taskTitles = userEntry.TaskTitles;
                 }
                 else
                     return;
             }
 
-            Console.WriteLine($"\nCreating a user story for {userName}");
-            Console.WriteLine($"named {userStoryTitle}");
+            Console.WriteLine($"\nCreating a user story for {userName} named {userStoryTitle}");
             Console.WriteLine($"for Sprint {sprintNum} in the Sofware project");
             Console.WriteLine($"with 5 custom titled child tasks.");
             Console.WriteLine($"\nPress any key to cancel.\n");

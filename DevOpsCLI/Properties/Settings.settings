@@ -1,0 +1,24 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="DevOpsCLI.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="LastSprintNum" Type="System.String" Scope="User">
+      <Value Profile="(Default)">088</Value>
+    </Setting>
+    <Setting Name="LastTask1" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Task 1</Value>
+    </Setting>
+    <Setting Name="LastTask2" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Task 2</Value>
+    </Setting>
+    <Setting Name="LastTask3" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Task 3</Value>
+    </Setting>
+    <Setting Name="LastTask4" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Task 4</Value>
+    </Setting>
+    <Setting Name="LastTask5" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Task 5</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>
