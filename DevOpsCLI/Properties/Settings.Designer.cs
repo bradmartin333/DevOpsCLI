@@ -25,18 +25,6 @@ namespace DevOpsCLI.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("088")]
-        public string LastSprintNum {
-            get {
-                return ((string)(this["LastSprintNum"]));
-            }
-            set {
-                this["LastSprintNum"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("Task 1")]
         public string LastTask1 {
             get {

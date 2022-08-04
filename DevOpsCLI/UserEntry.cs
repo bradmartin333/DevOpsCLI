@@ -8,7 +8,6 @@ namespace DevOpsCLI
     {
         public string UserName { get; internal set; }
         public string UserStoryTitle { get; internal set; }
-        public string SprintNum { get; internal set; }
         public string[] TaskTitles { get; internal set; } = new string[5];
         private readonly string[] Names;
 
@@ -58,7 +57,6 @@ namespace DevOpsCLI
             
             UserName = ComboNames.Text;
             UserStoryTitle = TextTitle.Text;
-            SprintNum = $"{NumSprintNumA.Value}{NumSprintNumB.Value}{NumSprintNumC.Value}";
             SaveSettings();
             DialogResult = DialogResult.OK;
             Close();
@@ -67,11 +65,6 @@ namespace DevOpsCLI
 
         private void LoadSettings()
         {
-            char[] vals = Properties.Settings.Default.LastSprintNum.ToCharArray();
-            NumSprintNumA.Value = vals[0] - '0';
-            NumSprintNumB.Value = vals[1] - '0';
-            NumSprintNumC.Value = vals[2] - '0';
-
             TextTask1.Text = Properties.Settings.Default.LastTask1;
             TextTask2.Text = Properties.Settings.Default.LastTask2;
             TextTask3.Text = Properties.Settings.Default.LastTask3;
@@ -81,7 +74,6 @@ namespace DevOpsCLI
 
         private void SaveSettings()
         {
-            Properties.Settings.Default.LastSprintNum = SprintNum;
             Properties.Settings.Default.LastTask1 = TaskTitles[0];
             Properties.Settings.Default.LastTask2 = TaskTitles[1];
             Properties.Settings.Default.LastTask3 = TaskTitles[2];

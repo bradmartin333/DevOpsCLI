@@ -7,16 +7,17 @@ namespace DevOpsCLI
 {
     public class Azure
     {
-        public static readonly List<string> Names = new List<string>(); // Hardcoded to obtain the top 1000
+        public static readonly List<string> Names = new List<string>();
+        public static readonly List<string> Aliases = new List<string>();
 
-        public static string CreateWorkItem(string assignee, string title, string type, string sprintNum, string project = "Software")
+        public static string CreateWorkItem(string assignee, string title, string type, string project = "Software")
         {
             var proc = new Process
             {
                 StartInfo = new ProcessStartInfo
                 {
                     FileName = @"C:\Windows\system32\WindowsPowerShell\v1.0\powershell.exe",
-                    Arguments = $"az boards work-item create --title \\\"{title}\\\" --type \\\"{type}\\\" --assigned-to \\\"{assignee}\\\" --area \\\"Sprint {sprintNum}\\\" --project \\\"{project}\\\" --reason \\\"New\\\" --output tsv",
+                    Arguments = $"az boards work-item create --title \\\"{title}\\\" --type \\\"{type}\\\" --assigned-to \\\"{assignee}\\\" --project \\\"{project}\\\" --reason \\\"New\\\" --output tsv",
                     UseShellExecute = false,
                     RedirectStandardOutput = true,
                     CreateNoWindow = true,
@@ -60,6 +61,7 @@ namespace DevOpsCLI
 
         public static void GetNames()
         {
+            // Hardcoded to obtain the top 1000
             var proc = new Process
             {
                 StartInfo = new ProcessStartInfo
@@ -81,10 +83,18 @@ namespace DevOpsCLI
 
         private static void Proc_OutputDataReceived(object sender, DataReceivedEventArgs e)
         {
-            if (e.Data != null && e.Data.Contains("displayName")) // Hardcoded keyword
+            if (e.Data != null)
             {
-                string name = e.Data.Split('\"')[3]; // Assumes consistent output
-                if (!Names.Contains(name)) Names.Add(name); // One way to have no duplicates
+                if (e.Data.Contains("displayName"))
+                {
+                    string name = e.Data.Split('\"')[3]; // Assumes consistent output
+                    if (!Names.Contains(name)) Names.Add(name); // One way to have no duplicates
+                }
+                else if (e.Data.Contains("directoryAlias"))
+                {
+                    string alias = e.Data.Split('\"')[3]; // Assumes consistent output
+                    if (!Aliases.Contains(alias)) Aliases.Add(alias); // One way to have no duplicates
+                }
             }
         }
     }

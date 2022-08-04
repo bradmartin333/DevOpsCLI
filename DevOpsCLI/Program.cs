@@ -11,7 +11,7 @@ namespace DevOpsCLI
         private static readonly System.Timers.Timer Timer = new System.Timers.Timer(5000); // Give user 5 second delay to cancel
         private static readonly List<string> NewIDs = new List<string>();
         private static CancellationTokenSource TokenSource;
-        private static string UserName, UserStoryTitle, SprintNum;
+        private static string UserName, UserStoryTitle;
         private static string[] TaskTitles;
 
         [STAThread]
@@ -36,7 +36,6 @@ namespace DevOpsCLI
                     {
                         UserName = userEntry.UserName;
                         UserStoryTitle = userEntry.UserStoryTitle;
-                        SprintNum = userEntry.SprintNum;
                         TaskTitles = userEntry.TaskTitles;
                     }
                     else
@@ -44,8 +43,7 @@ namespace DevOpsCLI
                 }
 
                 Console.WriteLine($"\nCreating a user story for {UserName} named {UserStoryTitle}");
-                Console.WriteLine($"for Sprint {SprintNum} in the Sofware project");
-                Console.WriteLine($"with 5 custom titled child tasks");
+                Console.WriteLine($"in the Software project with 5 custom titled child tasks");
                 Console.WriteLine($"\nPress any key to cancel");
 
                 Timer.Start();
@@ -91,13 +89,23 @@ namespace DevOpsCLI
             Task Task = Task.Factory.StartNew(() =>
             {
                 if (token.IsCancellationRequested) return;
-                string userStoryID = Azure.CreateWorkItem(UserName, UserStoryTitle, "User Story", SprintNum, "Hardware");
+                string userStoryID = Azure.CreateWorkItem(UserName, UserStoryTitle, "User Story", "Hardware");
+                if (string.IsNullOrEmpty(userStoryID))
+                {
+                    Console.WriteLine("Failed to create user story\nCancelling...");
+                    return;
+                }
                 NewIDs.Add(userStoryID);
 
                 for (int i = 0; i < TaskTitles.Length; i++)
                 {
                     if (token.IsCancellationRequested) return;
-                    string taskID = Azure.CreateWorkItem(UserName, TaskTitles[i], "Task", SprintNum, "Hardware");
+                    string taskID = Azure.CreateWorkItem(UserName, TaskTitles[i], "Task", "Hardware");
+                    if (string.IsNullOrEmpty(taskID))
+                    {
+                        Console.WriteLine("Failed to create user story\nCancelling...");
+                        return;
+                    }
                     NewIDs.Add(taskID);
                     Console.WriteLine($"Created Task {taskID}");
                     if (token.IsCancellationRequested) return;
