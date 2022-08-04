@@ -9,7 +9,7 @@ namespace DevOpsCLI
         public string UserName { get; internal set; }
         public string UserStoryTitle { get; internal set; }
         public string SprintNum { get; internal set; }
-        public string[] TaskTitles { get; internal set; }
+        public string[] TaskTitles { get; internal set; } = new string[5];
         private readonly string[] Names;
 
         public UserEntry(string[] names)
@@ -34,29 +34,31 @@ namespace DevOpsCLI
                     return;
             }
 
-            List<string> taskTitles = new List<string>();
+            if (string.IsNullOrEmpty(TextTitle.Text))
+            {
+                DialogResult result1 = MessageBox.Show($"No entry for user story title", "DevOpsCLI", MessageBoxButtons.OKCancel);
+                if (result1 == DialogResult.Cancel)
+                {
+                    DialogResult = DialogResult.Cancel;
+                    return;
+                }
+                else
+                    return;
+            }
+
+            int taskIdx = 0;
             foreach (TextBox textBox in TLP.Controls.OfType<TextBox>())
             {
-                if (string.IsNullOrEmpty(textBox.Text))
+                if (textBox.Tag.ToString() == "task" && !string.IsNullOrEmpty(textBox.Text))
                 {
-                    DialogResult result1 = MessageBox.Show($"No entry for '{textBox.Name}'",
-                        "DevOpsCLI", MessageBoxButtons.OKCancel);
-                    if (result1 == DialogResult.Cancel)
-                    {
-                        DialogResult = DialogResult.Cancel;
-                        return;
-                    }
-                    else
-                        return;
+                    TaskTitles[taskIdx] = textBox.Text;
+                    taskIdx++;
                 }
-                else if (textBox.Tag.ToString() == "task")
-                    taskTitles.Add(textBox.Text);
             }
             
             UserName = ComboNames.Text;
             UserStoryTitle = TextTitle.Text;
             SprintNum = $"{NumSprintNumA.Value}{NumSprintNumB.Value}{NumSprintNumC.Value}";
-            TaskTitles = taskTitles.ToArray();
             SaveSettings();
             DialogResult = DialogResult.OK;
             Close();

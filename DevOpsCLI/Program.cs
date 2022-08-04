@@ -11,41 +11,40 @@ namespace DevOpsCLI
         private static readonly System.Timers.Timer Timer = new System.Timers.Timer(5000); // Give user 5 second delay to cancel
         private static readonly List<string> NewIDs = new List<string>();
         private static CancellationTokenSource TokenSource;
+        private static string UserName, UserStoryTitle, SprintNum;
+        private static string[] TaskTitles;
 
+        [STAThread]
         static void Main(string[] args)
         {
             Timer.Elapsed += Timer_Elapsed;
 
             Console.WriteLine("Software DevOps Generator v0.1\n");
             Console.WriteLine("Fetching names...");
-            //Azure.GetNames();
+            Azure.GetNames();
 
             while (true)
             {
                 Console.WriteLine("Awaiting user input...");
                 TokenSource = new CancellationTokenSource();
 
-                // Get these from the dialog
-                string userName, userStoryTitle, sprintNum;
-                string[] taskTitles;
-
-                //using (UserEntry userEntry = new UserEntry(Azure.Names.ToArray()))
-                using (UserEntry userEntry = new UserEntry(new string[] { "billy" }))
+                //using (UserEntry userEntry = new UserEntry(new string[] { "debug" }))
+                using (UserEntry userEntry = new UserEntry(Azure.Names.ToArray()))
                 {
                     DialogResult result = userEntry.ShowDialog();
                     if (result == DialogResult.OK)
                     {
-                        userName = userEntry.UserName;
-                        userStoryTitle = userEntry.UserStoryTitle;
-                        sprintNum = userEntry.SprintNum;
-                        taskTitles = userEntry.TaskTitles;
+                        UserName = userEntry.UserName;
+                        UserStoryTitle = userEntry.UserStoryTitle;
+                        SprintNum = userEntry.SprintNum;
+                        TaskTitles = userEntry.TaskTitles;
                     }
                     else
                         return;
                 }
 
-                Console.WriteLine($"\nCreating a user story for {userName} named {userStoryTitle}");
-                Console.WriteLine($"for Sprint {sprintNum} in the Sofware project");
+                Console.WriteLine($"\nCreating a user story for {UserName} named {UserStoryTitle}");
+                Console.WriteLine($"for Sprint {SprintNum} in the Sofware project");
                 Console.WriteLine($"with 5 custom titled child tasks");
                 Console.WriteLine($"\nPress any key to cancel");
 
@@ -85,34 +84,43 @@ namespace DevOpsCLI
             NewIDs.Clear();
             Timer.Stop();
 
-            //private readonly static string[] WorkItemTypes = new string[] { "User Story", "Task" };
-            //string userStoryID = CreateWorkItem("Test Story", WorkItemTypes[0], "Hardware\\Max", "Hardware");
-            //if (string.IsNullOrEmpty(userStoryID))
-            //    Console.WriteLine("Invalid Entry - Ensure that the desired Sprint exists and try again");
-            //else
-            //{
-            //    Console.WriteLine($"Created User Story {userStoryID}");
-            //    for (int i = 1; i <= 5; i++)
-            //    {
-            //        string taskID = CreateWorkItem($"Test Task {i}", WorkItemTypes[1], "Hardware\\Max", "Hardware");
-            //        AssignParent(taskID, userStoryID);
-            //        Console.WriteLine($"Created Task {taskID}");
-            //    }
-            //}
-
             CancellationToken token = TokenSource.Token;
+
+            //UserName, UserStoryTitle, SprintNum, TaskTitles
+
             Task Task = Task.Factory.StartNew(() =>
             {
-                for (int i = 0; i < 50; i++)
+                if (token.IsCancellationRequested) return;
+                string userStoryID = Azure.CreateWorkItem(UserName, UserStoryTitle, "User Story", SprintNum, "Hardware");
+                NewIDs.Add(userStoryID);
+
+                for (int i = 0; i < TaskTitles.Length; i++)
                 {
                     if (token.IsCancellationRequested) return;
-                    Console.WriteLine(i);
-                    NewIDs.Add(i.ToString());
-                    Thread.SpinWait(10000000);
+                    string taskID = Azure.CreateWorkItem(UserName, TaskTitles[i], "Task", SprintNum, "Hardware");
+                    NewIDs.Add(taskID);
+                    Console.WriteLine($"Created Task {taskID}");
+                    if (token.IsCancellationRequested) return;
+                    Azure.AssignParent(taskID, userStoryID);
                 }
+
                 Console.WriteLine("\nTask Complete\nPress any key to continue");
             },
             token);
+
+            // Dummy task for debugging
+            //Task Task = Task.Factory.StartNew(() =>
+            //{
+            //    for (int i = 0; i < 50; i++)
+            //    {
+            //        if (token.IsCancellationRequested) return;
+            //        Console.WriteLine(i);
+            //        NewIDs.Add(i.ToString());
+            //        Thread.SpinWait(10000000);
+            //    }
+            //    Console.WriteLine("\nTask Complete\nPress any key to continue");
+            //},
+            //token);
         }
     }
 }

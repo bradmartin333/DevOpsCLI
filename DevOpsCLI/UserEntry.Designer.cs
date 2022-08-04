@@ -53,6 +53,8 @@
             // ComboNames
             // 
             this.ComboNames.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.ComboNames.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend;
+            this.ComboNames.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
             this.TLP.SetColumnSpan(this.ComboNames, 3);
             this.ComboNames.FormattingEnabled = true;
             this.ComboNames.Location = new System.Drawing.Point(91, 2);
@@ -112,7 +114,7 @@
             this.LblAssignedUser.Location = new System.Drawing.Point(2, 0);
             this.LblAssignedUser.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.LblAssignedUser.Name = "LblAssignedUser";
-            this.LblAssignedUser.Size = new System.Drawing.Size(85, 27);
+            this.LblAssignedUser.Size = new System.Drawing.Size(85, 28);
             this.LblAssignedUser.TabIndex = 0;
             this.LblAssignedUser.Text = "Assigned User";
             this.LblAssignedUser.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -123,7 +125,7 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.LblUserStoryTitle.AutoSize = true;
-            this.LblUserStoryTitle.Location = new System.Drawing.Point(2, 27);
+            this.LblUserStoryTitle.Location = new System.Drawing.Point(2, 28);
             this.LblUserStoryTitle.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.LblUserStoryTitle.Name = "LblUserStoryTitle";
             this.LblUserStoryTitle.Size = new System.Drawing.Size(85, 27);
@@ -137,7 +139,7 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.LblSprintNumber.AutoSize = true;
-            this.LblSprintNumber.Location = new System.Drawing.Point(2, 54);
+            this.LblSprintNumber.Location = new System.Drawing.Point(2, 55);
             this.LblSprintNumber.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.LblSprintNumber.Name = "LblSprintNumber";
             this.LblSprintNumber.Size = new System.Drawing.Size(85, 29);
@@ -151,10 +153,10 @@
             this.TLP.SetColumnSpan(this.BtnConfirm, 4);
             this.BtnConfirm.Dock = System.Windows.Forms.DockStyle.Fill;
             this.BtnConfirm.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.BtnConfirm.Location = new System.Drawing.Point(2, 297);
+            this.BtnConfirm.Location = new System.Drawing.Point(2, 298);
             this.BtnConfirm.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.BtnConfirm.Name = "BtnConfirm";
-            this.BtnConfirm.Size = new System.Drawing.Size(317, 37);
+            this.BtnConfirm.Size = new System.Drawing.Size(317, 36);
             this.BtnConfirm.TabIndex = 3;
             this.BtnConfirm.Text = "Confirm";
             this.BtnConfirm.UseVisualStyleBackColor = false;
@@ -164,7 +166,7 @@
             // 
             this.TextTitle.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
             this.TLP.SetColumnSpan(this.TextTitle, 3);
-            this.TextTitle.Location = new System.Drawing.Point(91, 29);
+            this.TextTitle.Location = new System.Drawing.Point(91, 30);
             this.TextTitle.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.TextTitle.Name = "TextTitle";
             this.TextTitle.Size = new System.Drawing.Size(228, 23);
@@ -179,7 +181,7 @@
             this.LblTaskNames.AutoSize = true;
             this.TLP.SetColumnSpan(this.LblTaskNames, 4);
             this.LblTaskNames.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LblTaskNames.Location = new System.Drawing.Point(4, 106);
+            this.LblTaskNames.Location = new System.Drawing.Point(4, 107);
             this.LblTaskNames.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.LblTaskNames.Name = "LblTaskNames";
             this.LblTaskNames.Size = new System.Drawing.Size(313, 21);
@@ -191,7 +193,7 @@
             // 
             this.TextTask1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
             this.TLP.SetColumnSpan(this.TextTask1, 4);
-            this.TextTask1.Location = new System.Drawing.Point(4, 130);
+            this.TextTask1.Location = new System.Drawing.Point(4, 131);
             this.TextTask1.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.TextTask1.Name = "TextTask1";
             this.TextTask1.Size = new System.Drawing.Size(313, 23);
@@ -203,7 +205,7 @@
             // 
             this.TextTask2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
             this.TLP.SetColumnSpan(this.TextTask2, 4);
-            this.TextTask2.Location = new System.Drawing.Point(4, 159);
+            this.TextTask2.Location = new System.Drawing.Point(4, 160);
             this.TextTask2.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.TextTask2.Name = "TextTask2";
             this.TextTask2.Size = new System.Drawing.Size(313, 23);
@@ -215,7 +217,7 @@
             // 
             this.TextTask3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
             this.TLP.SetColumnSpan(this.TextTask3, 4);
-            this.TextTask3.Location = new System.Drawing.Point(4, 188);
+            this.TextTask3.Location = new System.Drawing.Point(4, 189);
             this.TextTask3.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.TextTask3.Name = "TextTask3";
             this.TextTask3.Size = new System.Drawing.Size(313, 23);
@@ -227,7 +229,7 @@
             // 
             this.TextTask4.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
             this.TLP.SetColumnSpan(this.TextTask4, 4);
-            this.TextTask4.Location = new System.Drawing.Point(4, 217);
+            this.TextTask4.Location = new System.Drawing.Point(4, 218);
             this.TextTask4.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.TextTask4.Name = "TextTask4";
             this.TextTask4.Size = new System.Drawing.Size(313, 23);
@@ -239,7 +241,7 @@
             // 
             this.TextTask5.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
             this.TLP.SetColumnSpan(this.TextTask5, 4);
-            this.TextTask5.Location = new System.Drawing.Point(4, 246);
+            this.TextTask5.Location = new System.Drawing.Point(4, 247);
             this.TextTask5.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.TextTask5.Name = "TextTask5";
             this.TextTask5.Size = new System.Drawing.Size(313, 23);
@@ -250,7 +252,7 @@
             // NumSprintNumA
             // 
             this.NumSprintNumA.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
-            this.NumSprintNumA.Location = new System.Drawing.Point(93, 57);
+            this.NumSprintNumA.Location = new System.Drawing.Point(93, 58);
             this.NumSprintNumA.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.NumSprintNumA.Name = "NumSprintNumA";
             this.NumSprintNumA.Size = new System.Drawing.Size(69, 23);
@@ -260,7 +262,7 @@
             // NumSprintNumB
             // 
             this.NumSprintNumB.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
-            this.NumSprintNumB.Location = new System.Drawing.Point(170, 57);
+            this.NumSprintNumB.Location = new System.Drawing.Point(170, 58);
             this.NumSprintNumB.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.NumSprintNumB.Name = "NumSprintNumB";
             this.NumSprintNumB.Size = new System.Drawing.Size(69, 23);
@@ -270,7 +272,7 @@
             // NumSprintNumC
             // 
             this.NumSprintNumC.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
-            this.NumSprintNumC.Location = new System.Drawing.Point(247, 57);
+            this.NumSprintNumC.Location = new System.Drawing.Point(247, 58);
             this.NumSprintNumC.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.NumSprintNumC.Name = "NumSprintNumC";
             this.NumSprintNumC.Size = new System.Drawing.Size(70, 23);

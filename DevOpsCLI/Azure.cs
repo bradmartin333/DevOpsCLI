@@ -9,14 +9,14 @@ namespace DevOpsCLI
     {
         public static readonly List<string> Names = new List<string>(); // Hardcoded to obtain the top 1000
 
-        public static string CreateWorkItem(string title, string type, string sprintNum, string project = "Software")
+        public static string CreateWorkItem(string assignee, string title, string type, string sprintNum, string project = "Software")
         {
             var proc = new Process
             {
                 StartInfo = new ProcessStartInfo
                 {
                     FileName = @"C:\Windows\system32\WindowsPowerShell\v1.0\powershell.exe",
-                    Arguments = $"az boards work-item create --title \\\"{title}\\\" --type \\\"{type}\\\" --area \\\"Sprint {sprintNum}\\\" --project \\\"{project}\\\" --reason \\\"New\\\" --output tsv",
+                    Arguments = $"az boards work-item create --title \\\"{title}\\\" --type \\\"{type}\\\" --assigned-to \\\"{assignee}\\\" --area \\\"Sprint {sprintNum}\\\" --project \\\"{project}\\\" --reason \\\"New\\\" --output tsv",
                     UseShellExecute = false,
                     RedirectStandardOutput = true,
                     CreateNoWindow = true,
