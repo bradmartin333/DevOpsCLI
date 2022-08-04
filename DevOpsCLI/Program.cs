@@ -99,7 +99,7 @@ namespace DevOpsCLI
                             if (toggleColor)
                             {
                                 Console.ForegroundColor = ConsoleColor.Black;
-                                Console.BackgroundColor = ConsoleColor.White;
+                                Console.BackgroundColor = ConsoleColor.Gray;
                             }
                             else
                                 Console.ResetColor();
