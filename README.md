@@ -42,5 +42,6 @@ Follow these steps to get to automating Azure DevOps
 - Tasks automatically assigned as children to user story
 - Can leave all task names blank to make just a user story
 - Ability to delete created items afterwards
+- Plot user story points for current sprints
 - Thread-safe cancellation of task
 - Lots of room to grow
