@@ -33,6 +33,7 @@ namespace DevOpsCLI
                 Console.WriteLine("Awaiting user input...");
                 TokenSource = new CancellationTokenSource();
 
+                bool run = true;
                 using (UserEntry userEntry = new UserEntry())
                 {
                     DialogResult result = userEntry.ShowDialog();
@@ -45,14 +46,19 @@ namespace DevOpsCLI
                         TaskTitles = userEntry.TaskTitles.ToList().Where(x => !string.IsNullOrEmpty(x)).ToArray();
                     }
                     else
-                        return;
+                        run = false;
                 }
 
-                Console.WriteLine($"\nCreating a user story for {UserName} named {UserStoryTitle}");
-                Console.WriteLine($"in the {Project} project{(TaskTitles.Length > 0 ? $" with {TaskTitles.Length} custom titled child tasks" : "")}");
-                Console.WriteLine($"\nPress any key to cancel");
-
-                Timer.Start();
+                if (run)
+                {
+                    Console.WriteLine($"\nCreating a user story for {UserName} named {UserStoryTitle}");
+                    Console.WriteLine($"in the {Project} project{(TaskTitles.Length > 0 ? $" with {TaskTitles.Length} custom titled child tasks" : "")}");
+                    Console.WriteLine($"\nPress any key to cancel");
+                    Timer.Start();
+                }
+                else
+                    Console.WriteLine("\nNo task run\nPress any key to continue");
+                
                 ConsoleKeyInfo end = Console.ReadKey();
                 TokenSource.Cancel();
                 Timer.Stop();
@@ -78,7 +84,7 @@ namespace DevOpsCLI
                             Console.WriteLine($"Deleting {NewIDs.Count} items...");
                             int deleteCount = 0;
                             foreach (string id in NewIDs)
-                                deleteCount += Azure.DeletaWorkItem(id, Project);
+                                deleteCount += Azure.DeleteWorkItem(id, Project);
                             Console.WriteLine($"Deleted {deleteCount} items\n");
                         }
                         break;

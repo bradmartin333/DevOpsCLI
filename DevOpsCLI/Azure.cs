@@ -51,7 +51,7 @@ namespace DevOpsCLI
             }
         }
 
-        public static int DeletaWorkItem(string id, string project)
+        public static int DeleteWorkItem(string id, string project)
         {
             var proc = new Process
             {
