@@ -1,52 +1,90 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace DevOpsCLI
 {
     internal class Program
     {
-        private static readonly List<string> Names = new List<string>(); // Hardcoded to obtain the top 1000
         private static readonly System.Timers.Timer Timer = new System.Timers.Timer(5000); // Give user 5 second delay to cancel
+        private static readonly List<string> NewIDs = new List<string>();
+        private static CancellationTokenSource TokenSource;
 
         static void Main(string[] args)
         {
+            Timer.Elapsed += Timer_Elapsed;
+
             Console.WriteLine("Software DevOps Generator v0.1\n");
             Console.WriteLine("Fetching names...");
-            GetNames();
-            Console.WriteLine("Awaiting user input...");
+            //Azure.GetNames();
 
-            // Get these from the dialog
-            string userName, userStoryTitle, sprintNum;
-            string[] taskTitles;
-
-            using (UserEntry userEntry = new UserEntry(Names.ToArray()))
+            while (true)
             {
-                DialogResult result = userEntry.ShowDialog();
-                if (result == DialogResult.OK)
-                {
-                    userName = userEntry.UserName;
-                    userStoryTitle = userEntry.UserStoryTitle;
-                    sprintNum = userEntry.SprintNum;
-                    taskTitles = userEntry.TaskTitles;
-                }
-                else
-                    return;
-            }
+                Console.WriteLine("Awaiting user input...");
+                TokenSource = new CancellationTokenSource();
 
-            Console.WriteLine($"\nCreating a user story for {userName} named {userStoryTitle}");
-            Console.WriteLine($"for Sprint {sprintNum} in the Sofware project");
-            Console.WriteLine($"with 5 custom titled child tasks.");
-            Console.WriteLine($"\nPress any key to cancel.\n");
-            Timer.Elapsed += Timer_Elapsed;
-            Timer.Start();
-            ConsoleKeyInfo i = Console.ReadKey(); // Will always close the window, even if the automation process is running
+                // Get these from the dialog
+                string userName, userStoryTitle, sprintNum;
+                string[] taskTitles;
+
+                //using (UserEntry userEntry = new UserEntry(Azure.Names.ToArray()))
+                using (UserEntry userEntry = new UserEntry(new string[] { "billy" }))
+                {
+                    DialogResult result = userEntry.ShowDialog();
+                    if (result == DialogResult.OK)
+                    {
+                        userName = userEntry.UserName;
+                        userStoryTitle = userEntry.UserStoryTitle;
+                        sprintNum = userEntry.SprintNum;
+                        taskTitles = userEntry.TaskTitles;
+                    }
+                    else
+                        return;
+                }
+
+                Console.WriteLine($"\nCreating a user story for {userName} named {userStoryTitle}");
+                Console.WriteLine($"for Sprint {sprintNum} in the Sofware project");
+                Console.WriteLine($"with 5 custom titled child tasks");
+                Console.WriteLine($"\nPress any key to cancel");
+
+                Timer.Start();
+                ConsoleKeyInfo end = Console.ReadKey();
+                TokenSource.Cancel();
+                Timer.Stop();
+                Console.WriteLine("\n");
+
+                if (NewIDs.Count > 0) Console.WriteLine($"{NewIDs.Count} new IDs have been created.");
+                Console.WriteLine("Press 'r' to run again");
+                Console.WriteLine("Press 'd' to delete any newly created IDs and run again");
+                Console.WriteLine("Press any other key to quit");
+
+                ConsoleKeyInfo input = Console.ReadKey();
+                Console.WriteLine("\n");
+                switch (input.KeyChar)
+                {
+                    case 'r':
+                        break;
+                    case 'd':
+                        Console.WriteLine("Press d again to confirm deletion");
+                        ConsoleKeyInfo confirm = Console.ReadKey();
+                        Console.WriteLine("\n");
+                        if (confirm.KeyChar == 'd')
+                            Console.WriteLine($"Deleting {NewIDs.Count} items...");
+                        break;
+                    default:
+                        return;
+                }
+            }
         }
 
         private static void Timer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
         {
+            Console.WriteLine("\n--- Task Started ---\n");
+            NewIDs.Clear();
+            Timer.Stop();
+
             //private readonly static string[] WorkItemTypes = new string[] { "User Story", "Task" };
             //string userStoryID = CreateWorkItem("Test Story", WorkItemTypes[0], "Hardware\\Max", "Hardware");
             //if (string.IsNullOrEmpty(userStoryID))
@@ -62,93 +100,19 @@ namespace DevOpsCLI
             //    }
             //}
 
-            for (int i = 0; i < 50; i++)
+            CancellationToken token = TokenSource.Token;
+            Task Task = Task.Factory.StartNew(() =>
             {
-                Console.WriteLine(i);
-                System.Threading.Thread.SpinWait(10000000);
-            }
-
-            Console.WriteLine("\nDone - press any key to exit");
-            Timer.Stop();
-        }
-
-        private static string CreateWorkItem(string title, string type, string sprintNum, string project = "Software")
-        {
-            var proc = new Process
-            {
-                StartInfo = new ProcessStartInfo
+                for (int i = 0; i < 50; i++)
                 {
-                    FileName = @"C:\Windows\system32\WindowsPowerShell\v1.0\powershell.exe",
-                    Arguments = $"az boards work-item create --title \\\"{title}\\\" --type \\\"{type}\\\" --area \\\"Sprint {sprintNum}\\\" --project \\\"{project}\\\" --reason \\\"New\\\" --output tsv",
-                    UseShellExecute = false,
-                    RedirectStandardOutput = true,
-                    CreateNoWindow = true,
-                    WorkingDirectory = @"C:\",
+                    if (token.IsCancellationRequested) return;
+                    Console.WriteLine(i);
+                    NewIDs.Add(i.ToString());
+                    Thread.SpinWait(10000000);
                 }
-            };
-
-            try
-            {
-                proc.Start();
-                proc.WaitForExit();
-                System.IO.StreamReader output = proc.StandardOutput;
-                string line = output.ReadLine(); // Only going to be one line since tsv output is specified
-                if (string.IsNullOrEmpty(line)) return null;
-                return line.Split('/').Last(); // ID of the work-item and assumes consistent output
-            }
-            catch (Exception)
-            {
-                return null;
-            }
-        }
-
-        private static void AssignParent(string childID, string parentID)
-        {
-            var proc = new Process
-            {
-                StartInfo = new ProcessStartInfo
-                {
-                    FileName = @"C:\Windows\system32\WindowsPowerShell\v1.0\powershell.exe",
-                    Arguments = $"az boards work-item relation add --id {childID} --relation-type parent --target-id {parentID}",
-                    UseShellExecute = false,
-                    RedirectStandardOutput = true,
-                    CreateNoWindow = true,
-                    WorkingDirectory = @"C:\",
-                }
-            };
-
-            proc.Start();
-            proc.WaitForExit();
-        }
-
-        private static void GetNames()
-        {
-            var proc = new Process
-            {
-                StartInfo = new ProcessStartInfo
-                {
-                    FileName = @"C:\Windows\system32\WindowsPowerShell\v1.0\powershell.exe",
-                    Arguments = $"az devops user list --top 1000",
-                    UseShellExecute = false,
-                    RedirectStandardOutput = true,
-                    CreateNoWindow = true,
-                    WorkingDirectory = @"C:\",
-                }
-            };
-
-            proc.OutputDataReceived += Proc_OutputDataReceived; // Async gather names
-            proc.Start();
-            proc.BeginOutputReadLine();
-            proc.WaitForExit();
-        }
-
-        private static void Proc_OutputDataReceived(object sender, DataReceivedEventArgs e)
-        {
-            if (e.Data != null && e.Data.Contains("displayName")) // Hardcoded keyword
-            {
-                string name = e.Data.Split('\"')[3]; // Assumes consistent output
-                if (!Names.Contains(name)) Names.Add(name); // One way to have no duplicates
-            }
+                Console.WriteLine("\nTask Complete\nPress any key to continue");
+            },
+            token);
         }
     }
 }
