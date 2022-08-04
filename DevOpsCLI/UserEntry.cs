@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Windows.Forms;
 
 namespace DevOpsCLI
@@ -20,45 +19,36 @@ namespace DevOpsCLI
             ComboNames.Items.AddRange(Names);
             Areas = Azure.Areas.ToArray();
             ComboAreas.Items.AddRange(Areas);
+            ComboAreas.Click += ComboAreas_Click;
             LoadSettings();
+        }
+
+        private void ComboAreas_Click(object sender, System.EventArgs e)
+        {
+            ComboAreas.Select(ComboAreas.Text.Length, 0);
         }
 
         private void BtnConfirm_Click(object sender, System.EventArgs e)
         {
             if (!Names.ToList().Contains(ComboNames.Text))
             {
-                DialogResult result1 = MessageBox.Show("Name not valid", "DevOpsCLI", MessageBoxButtons.OKCancel);
-                if (result1 == DialogResult.Cancel)
-                {
-                    DialogResult = DialogResult.Cancel;
-                    return;
-                }
-                else
-                    return;
+                DialogResult result = MessageBox.Show("Name not valid", "DevOpsCLI", MessageBoxButtons.OKCancel);
+                if (result == DialogResult.Cancel) DialogResult = DialogResult.Cancel;
+                return;
             }
 
             if (string.IsNullOrEmpty(TextTitle.Text))
             {
-                DialogResult result1 = MessageBox.Show($"No entry for user story title", "DevOpsCLI", MessageBoxButtons.OKCancel);
-                if (result1 == DialogResult.Cancel)
-                {
-                    DialogResult = DialogResult.Cancel;
-                    return;
-                }
-                else
-                    return;
+                DialogResult result = MessageBox.Show($"No entry for user story title", "DevOpsCLI", MessageBoxButtons.OKCancel);
+                if (result == DialogResult.Cancel) DialogResult = DialogResult.Cancel;
+                return;
             }
 
             if (!Areas.ToList().Contains(ComboAreas.Text))
             {
-                DialogResult result1 = MessageBox.Show("Area not valid", "DevOpsCLI", MessageBoxButtons.OKCancel);
-                if (result1 == DialogResult.Cancel)
-                {
-                    DialogResult = DialogResult.Cancel;
-                    return;
-                }
-                else
-                    return;
+                DialogResult result = MessageBox.Show("Area not valid", "DevOpsCLI", MessageBoxButtons.OKCancel);
+                if (result == DialogResult.Cancel) DialogResult = DialogResult.Cancel;
+                return;
             }
 
             int taskIdx = 0;
@@ -83,6 +73,7 @@ namespace DevOpsCLI
 
         private void LoadSettings()
         {
+            ComboAreas.Text = $"\\\\{Program.Project}\\\\Area\\\\";
             TextTask1.Text = Properties.Settings.Default.LastTask1;
             TextTask2.Text = Properties.Settings.Default.LastTask2;
             TextTask3.Text = Properties.Settings.Default.LastTask3;

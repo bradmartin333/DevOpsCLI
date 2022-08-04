@@ -153,6 +153,7 @@
             this.TextTitle.Size = new System.Drawing.Size(228, 23);
             this.TextTitle.TabIndex = 4;
             this.TextTitle.Tag = "story";
+            this.TextTitle.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // LabelTaskNames
             // 

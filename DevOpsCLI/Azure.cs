@@ -11,13 +11,13 @@ namespace DevOpsCLI
         public static readonly List<string> Areas = new List<string>();
         public static readonly List<string> AreaIDs = new List<string>();
 
-        public static string CreateWorkItem(string assignee, string title, string type, string project, string area, string storyPoints = null)
+        public static string CreateWorkItem(string assignee, string title, string type, string area, string storyPoints = null)
         {
             string arg = $"az boards work-item create " +
                          $"--title \\\"{title}\\\" " +
                          $"--type \\\"{type}\\\" " +
                          $"--assigned-to \\\"{assignee}\\\" " +
-                         $"--project \\\"{project}\\\" " +
+                         $"--project \\\"{Program.Project}\\\" " +
                          $"--reason \\\"New\\\" " +
                          $"--fields \\\"Area ID={area}\\\" " +
                          $"{(string.IsNullOrEmpty(storyPoints) ? "" : $"\\\"Story Points={storyPoints}\\\"")} " +
@@ -131,14 +131,14 @@ namespace DevOpsCLI
             }
         }
 
-        public static void GetAreas(string project)
+        public static void GetAreas()
         {
             var proc = new Process
             {
                 StartInfo = new ProcessStartInfo
                 {
                     FileName = @"C:\Windows\system32\WindowsPowerShell\v1.0\powershell.exe",
-                    Arguments = $"az boards area project list --project {project}",
+                    Arguments = $"az boards area project list --project {Program.Project}",
                     UseShellExecute = false,
                     RedirectStandardOutput = true,
                     CreateNoWindow = true,
