@@ -29,5 +29,18 @@ Follow these steps to get to automating Azure DevOps
 9. If a long return string is printed, then Azure CLI is all set up!
 
 ## Automation
-- Download and use the [included .exe](https://github.com/bradmartin333/DevOpsCLI/raw/master/DevOpsCLI/bin/Release/DevOpsCLI.exe) for the automation available currently in this repo
+- Download and use the [included .exe](https://github.com/bradmartin333/DevOpsCLI/raw/master/DevOpsCLI/bin/Release/DevOpsCLI.exe) for the automation available currently in this repo (If an exception occurs and the program exits, it is likely that the earlier steps were not completed)
 - Clone the repo and tinker as needed with the aid of the Azure CLI docs online
+- The online docs are actually quite good - mostly eveything can be accessed [from this page](https://docs.microsoft.com/en-us/cli/azure/boards?view=azure-cli-latest)
+
+## What does this repo do?
+
+![image](https://user-images.githubusercontent.com/19335151/182870531-af607292-0c67-4661-94fd-bbfbae83117d.png)
+
+- User and area names fetched from Azure for easy autofilling
+- Task name entries are saved between sessions
+- Tasks automatically assigned as children to user story
+- Can leave all task names blank to make just a user story
+- Ability to delete created items afterwards
+- Thread-safe cancellation of task
+- Lots of room to grow
