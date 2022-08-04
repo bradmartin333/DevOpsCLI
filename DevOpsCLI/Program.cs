@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -8,6 +9,8 @@ namespace DevOpsCLI
 {
     internal class Program
     {
+        private static readonly string Project = "Hardware"; // For debugging
+        //private static readonly string Project = "Software";
         private static readonly System.Timers.Timer Timer = new System.Timers.Timer(5000); // Give user 5 second delay to cancel
         private static readonly List<string> NewIDs = new List<string>();
         private static CancellationTokenSource TokenSource;
@@ -36,14 +39,14 @@ namespace DevOpsCLI
                     {
                         UserName = userEntry.UserName;
                         UserStoryTitle = userEntry.UserStoryTitle;
-                        TaskTitles = userEntry.TaskTitles;
+                        TaskTitles = userEntry.TaskTitles.ToList().Where(x => !string.IsNullOrEmpty(x)).ToArray();
                     }
                     else
                         return;
                 }
 
                 Console.WriteLine($"\nCreating a user story for {UserName} named {UserStoryTitle}");
-                Console.WriteLine($"in the Software project with 5 custom titled child tasks");
+                Console.WriteLine($"in the Software project{(TaskTitles.Length > 0 ? $" with {TaskTitles.Length} custom titled child tasks" : "")}");
                 Console.WriteLine($"\nPress any key to cancel");
 
                 Timer.Start();
@@ -68,7 +71,13 @@ namespace DevOpsCLI
                         ConsoleKeyInfo confirm = Console.ReadKey();
                         Console.WriteLine("\n");
                         if (confirm.KeyChar == 'd')
+                        {
                             Console.WriteLine($"Deleting {NewIDs.Count} items...");
+                            int deleteCount = 0;
+                            foreach (string id in NewIDs)
+                                deleteCount += Azure.DeletaWorkItem(id, Project);
+                            Console.WriteLine($"Deleted {deleteCount} items\n");
+                        }
                         break;
                     default:
                         return;
@@ -84,12 +93,11 @@ namespace DevOpsCLI
 
             CancellationToken token = TokenSource.Token;
 
-            //UserName, UserStoryTitle, SprintNum, TaskTitles
-
             Task Task = Task.Factory.StartNew(() =>
             {
                 if (token.IsCancellationRequested) return;
-                string userStoryID = Azure.CreateWorkItem(UserName, UserStoryTitle, "User Story", "Hardware");
+                string userStoryID = Azure.CreateWorkItem(UserName, UserStoryTitle, "User Story", Project);
+                Console.WriteLine($"Created User Story {userStoryID}");
                 if (string.IsNullOrEmpty(userStoryID))
                 {
                     Console.WriteLine("Failed to create user story\nCancelling...");
@@ -100,7 +108,7 @@ namespace DevOpsCLI
                 for (int i = 0; i < TaskTitles.Length; i++)
                 {
                     if (token.IsCancellationRequested) return;
-                    string taskID = Azure.CreateWorkItem(UserName, TaskTitles[i], "Task", "Hardware");
+                    string taskID = Azure.CreateWorkItem(UserName, TaskTitles[i], "Task", Project);
                     if (string.IsNullOrEmpty(taskID))
                     {
                         Console.WriteLine("Failed to create user story\nCancelling...");

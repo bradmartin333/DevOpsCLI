@@ -8,9 +8,8 @@ namespace DevOpsCLI
     public class Azure
     {
         public static readonly List<string> Names = new List<string>();
-        public static readonly List<string> Aliases = new List<string>();
 
-        public static string CreateWorkItem(string assignee, string title, string type, string project = "Software")
+        public static string CreateWorkItem(string assignee, string title, string type, string project)
         {
             var proc = new Process
             {
@@ -40,6 +39,36 @@ namespace DevOpsCLI
             }
         }
 
+        public static int DeletaWorkItem(string id, string project)
+        {
+            var proc = new Process
+            {
+                StartInfo = new ProcessStartInfo
+                {
+                    FileName = @"C:\Windows\system32\WindowsPowerShell\v1.0\powershell.exe",
+                    Arguments = $"az boards work-item delete --id {id} --project \\\"{project}\\\" -y --output tsv",
+                    UseShellExecute = false,
+                    RedirectStandardOutput = true,
+                    CreateNoWindow = true,
+                    WorkingDirectory = @"C:\",
+                }
+            };
+
+            try
+            {
+                proc.Start();
+                proc.WaitForExit();
+                System.IO.StreamReader output = proc.StandardOutput;
+                string line = output.ReadLine(); // Only going to be one line since tsv output is specified
+                if (string.IsNullOrEmpty(line)) return 0;
+                return 1; // Success
+            }
+            catch (Exception)
+            {
+                return 0;
+            }
+        }
+
         public static void AssignParent(string childID, string parentID)
         {
             var proc = new Process
@@ -49,7 +78,7 @@ namespace DevOpsCLI
                     FileName = @"C:\Windows\system32\WindowsPowerShell\v1.0\powershell.exe",
                     Arguments = $"az boards work-item relation add --id {childID} --relation-type parent --target-id {parentID}",
                     UseShellExecute = false,
-                    RedirectStandardOutput = true,
+                    RedirectStandardOutput = false,
                     CreateNoWindow = true,
                     WorkingDirectory = @"C:\",
                 }
@@ -83,18 +112,10 @@ namespace DevOpsCLI
 
         private static void Proc_OutputDataReceived(object sender, DataReceivedEventArgs e)
         {
-            if (e.Data != null)
+            if (e.Data != null && e.Data.Contains("displayName"))
             {
-                if (e.Data.Contains("displayName"))
-                {
-                    string name = e.Data.Split('\"')[3]; // Assumes consistent output
-                    if (!Names.Contains(name)) Names.Add(name); // One way to have no duplicates
-                }
-                else if (e.Data.Contains("directoryAlias"))
-                {
-                    string alias = e.Data.Split('\"')[3]; // Assumes consistent output
-                    if (!Aliases.Contains(alias)) Aliases.Add(alias); // One way to have no duplicates
-                }
+                string name = e.Data.Split('\"')[3]; // Assumes consistent output
+                if (!Names.Contains(name)) Names.Add(name); // One way to have no duplicates
             }
         }
     }
