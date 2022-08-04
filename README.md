@@ -23,7 +23,7 @@ Follow these steps to get to automating Azure DevOps
 5. Paste the new token with the right mouse button, then click enter
     - In the case of an error - try closing the shell and starting again from #3
 7. Set the organization
-    - `az devops configure -d organization=https://dev.azure.com/paratadevops/`
+    - `az devops configure -d organization=https://dev.azure.com/<myorg>/`
 8. Test showing info for an example work-item
     - `az boards work-item show --id 27856`
 9. If a long return string is printed, then Azure CLI is all set up!
