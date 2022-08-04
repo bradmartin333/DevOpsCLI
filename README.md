@@ -31,3 +31,15 @@ Follow these steps to get to automating Azure DevOps
 ## Automation
 - Download and use the [included .exe](https://github.com/bradmartin333/DevOpsCLI/raw/master/DevOpsCLI/bin/Release/DevOpsCLI.exe) for the automation available currently in this repo
 - Clone the repo and tinker as needed with the aid of the Azure CLI docs online
+
+## What does this repo do?
+
+![image](https://user-images.githubusercontent.com/19335151/182870531-af607292-0c67-4661-94fd-bbfbae83117d.png)
+
+- User and area names fetched from Azure for easy autofilling
+- Task name entries are saved between sessions
+- Tasks automatically assigned as children to user story
+- Can leave all task names blank to make just a user story
+- Ability to delete created items afterwards
+- Thread-safe cancellation of task
+- Lots of room to grow
