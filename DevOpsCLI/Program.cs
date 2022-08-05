@@ -9,8 +9,8 @@ namespace DevOpsCLI
 {
     internal class Program
     {
-        public static readonly string Project = "Hardware"; // For debugging
-        //public static readonly string Project = "Software";
+        //public static readonly string Project = "Hardware"; // For debugging
+        public static readonly string Project = "Software";
         private static readonly System.Timers.Timer Timer = new System.Timers.Timer(5000); // Give user 5 second delay to cancel
         private static readonly List<string> NewIDs = new List<string>();
         private static CancellationTokenSource TokenSource;
