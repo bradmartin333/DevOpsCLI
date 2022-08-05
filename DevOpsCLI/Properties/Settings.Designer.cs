@@ -26,60 +26,72 @@ namespace DevOpsCLI.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("Task 1")]
-        public string LastTask1 {
+        public string Task1 {
             get {
-                return ((string)(this["LastTask1"]));
+                return ((string)(this["Task1"]));
             }
             set {
-                this["LastTask1"] = value;
+                this["Task1"] = value;
             }
         }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("Task 2")]
-        public string LastTask2 {
+        public string Task2 {
             get {
-                return ((string)(this["LastTask2"]));
+                return ((string)(this["Task2"]));
             }
             set {
-                this["LastTask2"] = value;
+                this["Task2"] = value;
             }
         }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("Task 3")]
-        public string LastTask3 {
+        public string Task3 {
             get {
-                return ((string)(this["LastTask3"]));
+                return ((string)(this["Task3"]));
             }
             set {
-                this["LastTask3"] = value;
+                this["Task3"] = value;
             }
         }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("Task 4")]
-        public string LastTask4 {
+        public string Task4 {
             get {
-                return ((string)(this["LastTask4"]));
+                return ((string)(this["Task4"]));
             }
             set {
-                this["LastTask4"] = value;
+                this["Task4"] = value;
             }
         }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("Task 5")]
-        public string LastTask5 {
+        public string Task5 {
             get {
-                return ((string)(this["LastTask5"]));
+                return ((string)(this["Task5"]));
             }
             set {
-                this["LastTask5"] = value;
+                this["Task5"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("2")]
+        public string UserPoints {
+            get {
+                return ((string)(this["UserPoints"]));
+            }
+            set {
+                this["UserPoints"] = value;
             }
         }
     }

@@ -5,11 +5,13 @@ namespace DevOpsCLI
 {
     public partial class UserEntry : Form
     {
+        private static string ChosenArea = null;
+
         public string UserName { get; internal set; }
         public string UserStoryTitle { get; internal set; }
         public string Area { get; set; }
         public string StoryPoints { get; internal set; }
-        public string[] TaskTitles { get; internal set; } = new string[5];
+        public string[] Tasks { get; internal set; } = new string[5];
         private readonly string[] Names, Areas;
 
         public UserEntry()
@@ -17,8 +19,10 @@ namespace DevOpsCLI
             InitializeComponent();
             Names = Azure.Names.ToArray();
             ComboNames.Items.AddRange(Names);
+            ComboNames.DropDownWidth = Names.Select(x => x.Length).Max();
             Areas = Azure.Areas.ToArray();
             ComboAreas.Items.AddRange(Areas);
+            ComboAreas.DropDownWidth = Areas.Select(x => x.Length).Max();
             ComboAreas.Click += ComboAreas_Click;
             LoadSettings();
         }
@@ -56,7 +60,7 @@ namespace DevOpsCLI
             {
                 if (textBox.Tag.ToString() == "task" && !string.IsNullOrEmpty(textBox.Text))
                 {
-                    TaskTitles[taskIdx] = textBox.Text;
+                    Tasks[taskIdx] = textBox.Text;
                     taskIdx++;
                 }
             }
@@ -64,6 +68,7 @@ namespace DevOpsCLI
             UserName = ComboNames.Text;
             UserStoryTitle = TextTitle.Text;
             Area = ComboAreas.Text;
+            ChosenArea = Area;
             StoryPoints = NumStoryPoints.Value.ToString();
             SaveSettings();
             DialogResult = DialogResult.OK;
@@ -73,21 +78,23 @@ namespace DevOpsCLI
 
         private void LoadSettings()
         {
-            ComboAreas.Text = $"\\\\{Program.Project}\\\\Area\\\\";
-            TextTask1.Text = Properties.Settings.Default.LastTask1;
-            TextTask2.Text = Properties.Settings.Default.LastTask2;
-            TextTask3.Text = Properties.Settings.Default.LastTask3;
-            TextTask4.Text = Properties.Settings.Default.LastTask4;
-            TextTask5.Text = Properties.Settings.Default.LastTask5;
+            ComboAreas.Text = string.IsNullOrEmpty(ChosenArea) ? $"\\\\{Program.Project}\\\\Area\\\\" : ChosenArea;
+            TextTask1.Text = Properties.Settings.Default.Task1;
+            TextTask2.Text = Properties.Settings.Default.Task2;
+            TextTask3.Text = Properties.Settings.Default.Task3;
+            TextTask4.Text = Properties.Settings.Default.Task4;
+            TextTask5.Text = Properties.Settings.Default.Task5;
+            NumStoryPoints.Value = string.IsNullOrEmpty(Properties.Settings.Default.UserPoints) ? 2 : int.Parse(Properties.Settings.Default.UserPoints);
         }
 
         private void SaveSettings()
         {
-            Properties.Settings.Default.LastTask1 = TaskTitles[0];
-            Properties.Settings.Default.LastTask2 = TaskTitles[1];
-            Properties.Settings.Default.LastTask3 = TaskTitles[2];
-            Properties.Settings.Default.LastTask4 = TaskTitles[3];
-            Properties.Settings.Default.LastTask5 = TaskTitles[4];
+            Properties.Settings.Default.Task1 = Tasks[0];
+            Properties.Settings.Default.Task2 = Tasks[1];
+            Properties.Settings.Default.Task3 = Tasks[2];
+            Properties.Settings.Default.Task4 = Tasks[3];
+            Properties.Settings.Default.Task5 = Tasks[4];
+            Properties.Settings.Default.UserPoints = StoryPoints;
             Properties.Settings.Default.Save();
         }
     }

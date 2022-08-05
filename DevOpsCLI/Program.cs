@@ -9,13 +9,13 @@ namespace DevOpsCLI
 {
     internal class Program
     {
-        //public static readonly string Project = "Hardware"; // For debugging
-        public static readonly string Project = "Software";
+        public static readonly string Project = "Hardware"; // For debugging
+        //public static readonly string Project = "Software";
         private static readonly System.Timers.Timer Timer = new System.Timers.Timer(5000); // Give user 5 second delay to cancel
         private static readonly List<string> NewIDs = new List<string>();
         private static CancellationTokenSource TokenSource;
         private static string UserName, UserStoryTitle, StoryPoints, Area;
-        private static string[] TaskTitles;
+        private static string[] Tasks;
 
         [STAThread]
         static void Main(string[] args)
@@ -32,6 +32,7 @@ namespace DevOpsCLI
             {
                 Console.WriteLine("Awaiting user input...");
                 TokenSource = new CancellationTokenSource();
+                NewIDs.Clear();
 
                 bool run = true;
                 using (UserEntry userEntry = new UserEntry())
@@ -43,27 +44,27 @@ namespace DevOpsCLI
                         UserStoryTitle = userEntry.UserStoryTitle;
                         StoryPoints = userEntry.StoryPoints;
                         Area = Azure.AreaIDs[Azure.Areas.IndexOf(userEntry.Area)];
-                        TaskTitles = userEntry.TaskTitles.ToList().Where(x => !string.IsNullOrEmpty(x)).ToArray();
+                        Tasks = userEntry.Tasks.ToList().Where(x => !string.IsNullOrEmpty(x)).ToArray();
                     }
                     else
+                    {
+                        Console.Write("No task run");
                         run = false;
+                    }
                 }
 
                 if (run)
                 {
-                    Console.WriteLine($"\nCreating a user story for {UserName} named {UserStoryTitle}");
-                    Console.WriteLine($"in the {Project} project{(TaskTitles.Length > 0 ? $" with {TaskTitles.Length} custom titled child tasks" : "")}");
+                    Console.WriteLine($"\nCreating a user story for {UserName} named \"{UserStoryTitle}\"");
+                    Console.WriteLine($"in the {Project} project{(Tasks.Length > 0 ? $" with {Tasks.Length} custom child tasks" : "")}");
                     Console.WriteLine($"\nPress any key to cancel");
                     Timer.Start();
+                    ConsoleKeyInfo end = Console.ReadKey();
+                    TokenSource.Cancel();
+                    Timer.Stop();
                 }
-                else
-                    Console.WriteLine("\nNo task run\nPress any key to continue");
-                
-                ConsoleKeyInfo end = Console.ReadKey();
-                TokenSource.Cancel();
-                Timer.Stop();
-                Console.WriteLine("\n");
 
+                Console.WriteLine("\n");
                 if (NewIDs.Count > 0) Console.WriteLine($"{NewIDs.Count} new IDs have been created.");
                 Console.WriteLine("Press 'r' to run again");
                 Console.WriteLine("Press 'd' to delete any newly created IDs and run again");
@@ -123,7 +124,6 @@ namespace DevOpsCLI
         private static void Timer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
         {
             Console.WriteLine("\n--- Task Started ---\n");
-            NewIDs.Clear();
             Timer.Stop();
 
             CancellationToken token = TokenSource.Token;
@@ -140,10 +140,10 @@ namespace DevOpsCLI
                 }
                 NewIDs.Add(userStoryID);
 
-                for (int i = 0; i < TaskTitles.Length; i++)
+                for (int i = 0; i < Tasks.Length; i++)
                 {
                     if (token.IsCancellationRequested) return;
-                    string taskID = Azure.CreateWorkItem(UserName, TaskTitles[i], "Task", Area);
+                    string taskID = Azure.CreateWorkItem(UserName, Tasks[i], "Task", Area);
                     if (string.IsNullOrEmpty(taskID))
                     {
                         Console.WriteLine("Failed to create user story\nCancelling...");
