@@ -21,8 +21,15 @@ namespace DevOpsCLI
         static void Main(string[] args)
         {
             Timer.Elapsed += Timer_Elapsed;
-
-            Console.WriteLine("Software DevOps Generator v0.1\n");
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine(" ____              ___             ____ _     ___ ");
+            Console.WriteLine("|  _ \\  _____   __/ _ \\ _ __  ___ / ___| |   |_ _|");
+            Console.WriteLine("| | | |/ _ \\ \\ / / | | | '_ \\/ __| |   | |    | | ");
+            Console.WriteLine("| |_| |  __/\\ V /| |_| | |_) \\__ \\ |___| |___ | | ");
+            Console.WriteLine("|____/ \\___| \\_/  \\___/| .__/|___/\\____|_____|___|");
+            Console.Write("                       |_|                    ");
+            Console.ResetColor();
+            Console.WriteLine("v0.1");
             Console.WriteLine("Fetching names...");
             Azure.GetNames();
             Console.WriteLine("Fetching project areas...");
@@ -57,7 +64,9 @@ namespace DevOpsCLI
                 {
                     Console.WriteLine($"\nCreating a user story for {UserName} named \"{UserStoryTitle}\"");
                     Console.WriteLine($"in the {Project} project{(Tasks.Length > 0 ? $" with {Tasks.Length} custom child tasks" : "")}");
+                    Console.ForegroundColor = ConsoleColor.DarkYellow;
                     Console.WriteLine($"\nPress any key to cancel");
+                    Console.ResetColor();
                     Timer.Start();
                     ConsoleKeyInfo end = Console.ReadKey();
                     TokenSource.Cancel();
@@ -66,10 +75,13 @@ namespace DevOpsCLI
 
                 Console.WriteLine("\n");
                 if (NewIDs.Count > 0) Console.WriteLine($"{NewIDs.Count} new IDs have been created.");
+
+                Console.ForegroundColor = ConsoleColor.Blue;
                 Console.WriteLine("Press 'r' to run again");
                 Console.WriteLine("Press 'd' to delete any newly created IDs and run again");
                 Console.WriteLine($"Press 's' to view grouped story points for the active sprints in the {Project} project");
                 Console.WriteLine("Press any other key to quit");
+                Console.ResetColor();
 
                 ConsoleKeyInfo input = Console.ReadKey();
                 Console.WriteLine("\n");
@@ -83,11 +95,13 @@ namespace DevOpsCLI
                         Console.WriteLine("\n");
                         if (confirm.KeyChar == 'd')
                         {
+                            Console.BackgroundColor = ConsoleColor.DarkMagenta;
                             Console.WriteLine($"Deleting {NewIDs.Count} items...");
                             int deleteCount = 0;
                             foreach (string id in NewIDs)
                                 deleteCount += Azure.DeleteWorkItem(id, Project);
                             Console.WriteLine($"Deleted {deleteCount} items\n");
+                            Console.ResetColor();
                         }
                         break;
                     case 's':
