@@ -29,13 +29,11 @@ Follow these steps to get to automating Azure DevOps
 9. If a long return string is printed, then Azure CLI is all set up!
 
 ## Automation
-- Download and use the [included .exe](https://github.com/bradmartin333/DevOpsCLI/raw/master/DevOpsCLI/bin/Release/DevOpsCLI.exe) for the automation available currently in this repo (If an exception occurs and the program exits, it is likely that the earlier steps were not completed)
+- Download and use the [included .exe](https://github.com/bradmartin333/DevOpsCLI/raw/master/DevOpsCLI/bin/Release/DevOpsCLI.exe) for the automation available currently in this repo
+    - Right now, all it does is create hardcoded child tasks for a user determined work item
+    - If an exception occurs and the program exits, it is likely that the earlier steps were not completed or not enough time has elapsed since the creation of the work item ID
 - Clone the repo and tinker as needed with the aid of the Azure CLI docs online
 - The online docs are actually quite good - mostly eveything can be accessed [from this page](https://docs.microsoft.com/en-us/cli/azure/boards?view=azure-cli-latest)
-
-## What does this repo do (Latest version)?
-- Create hardcoded child tasks for existing work item
-- Lots of room to grow
 
 ## I want more control!
 - All Windows 10 computers have PowerShell and PowerShell ISE
