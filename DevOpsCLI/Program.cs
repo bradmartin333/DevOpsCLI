@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace DevOpsCLI
 {
@@ -18,13 +17,10 @@ namespace DevOpsCLI
 
             while (true)
             {
-                Console.WriteLine("Enter a User Story ID to create standard child tasks");
-                Console.WriteLine("(Right click to paste, enter nothing to see story point plot)");
+                Console.WriteLine("Enter a User Story ID to create standard child tasks (Right click to paste)");
                 Console.Write("\n> ");
                 string entry = Console.ReadLine();
-                if (string.IsNullOrEmpty(entry))
-                    StoryPointPlot();
-                else
+                if (long.TryParse(entry, out _))
                 {
                     WorkItem workItem = Azure.GetWorkItem(entry);
                     if (workItem.IsValid())
@@ -40,6 +36,8 @@ namespace DevOpsCLI
                     else
                         Console.WriteLine("Invalid work item ID");
                 }
+                else
+                    Console.WriteLine("Invalid work item ID");
                 Console.WriteLine("\n");
             }
         }
@@ -65,32 +63,8 @@ namespace DevOpsCLI
                 new NewTask() { Title = "Code & Code Review" },
                 new NewTask() { Title = "Test Plan Developed & Reviewed" },
                 new NewTask() { Title = "Test Cases Executed & Passed" },
-                new NewTask() { Title = "PO Acceptance", Assignee = "tjenkins@parata.com.com" },
+                new NewTask() { Title = "PO Acceptance", Assignee = "tjenkins@parata.com" },
             }.ToArray();
-        }
-
-        private static void StoryPointPlot()
-        {
-            Console.WriteLine("Fetching story point data...\n");
-            Azure.StoryPoints();
-            int padSize = Azure.StoryPointDict.Select(x => x.Key.Length).Max() + 2;
-            bool toggleColor = false;
-            foreach (KeyValuePair<string, int> item in Azure.StoryPointDict)
-            {
-                if (toggleColor)
-                {
-                    Console.ForegroundColor = ConsoleColor.Black;
-                    Console.BackgroundColor = ConsoleColor.Gray;
-                }
-                else
-                    Console.ResetColor();
-                Console.Write($"{item.Key.PadRight(padSize)}\t{item.Value,-5}");
-                for (int i = 0; i < item.Value; i++)
-                    Console.Write("*");
-                Console.WriteLine();
-                toggleColor = !toggleColor;
-            }
-            Console.ResetColor();
         }
     }
 }
