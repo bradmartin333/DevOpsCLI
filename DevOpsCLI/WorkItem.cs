@@ -25,7 +25,7 @@ namespace DevOpsCLI
             }
             catch (Exception)
             {
-                Console.WriteLine("Invalid work item ID");
+                Console.WriteLine("\nUnable to initialize work item");
             }
         }
 

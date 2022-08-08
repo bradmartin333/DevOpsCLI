@@ -31,7 +31,7 @@ namespace DevOpsCLI
                     WorkItem workItem = Azure.GetWorkItem(entry);
                     if (workItem.IsValid())
                     {
-                        Console.WriteLine($"\nCreating child tasks for \"{workItem.Title}\"...");
+                        Console.WriteLine($"\nCreating child Tasks for \"{workItem.Title}\"...");
                         for (int i = 0; i < Tasks.Count; i++)
                         {
                             Tasks[i].ID = Azure.CreateWorkItem(Tasks[i].Title, Tasks[i].Assignee, workItem.AreaID, workItem.IterationPath);
@@ -39,11 +39,9 @@ namespace DevOpsCLI
                             Console.WriteLine(Tasks[i].ID);
                         }
                     }
-                    else
-                        Console.WriteLine("\nInvalid work item ID");
                 }
                 else
-                    Console.WriteLine("\nInvalid work item ID");
+                    Console.WriteLine("\nID is not the correct format");
             }
         }
 
@@ -65,7 +63,7 @@ namespace DevOpsCLI
         private static void PrintPrompt()
         {
             Console.ForegroundColor = ConsoleColor.DarkYellow;
-            Console.WriteLine("\nEnter a User Story ID to create standard child tasks\n(Right click to paste)");
+            Console.WriteLine("\nEnter a User Story ID to create standard child Tasks\n(Right click to paste)");
             Console.ResetColor();
             Console.Write("\n> ");
         }
