@@ -47,4 +47,6 @@ All Windows 10 computers have PowerShell and PowerShell ISE
     - GitHub files can be saved by right clicking the "Raw" button in the top right of the file then clicking "Save link as..."
     - Save that file locally, right click it, then click "Run with PowerShell" and enter the User Story ID when prompted
     - Or, open that file in PowerShell ISE to tinker with it (I recommend making this the deafult app for opening .ps1 files)
+    - If an exception occurs, the permissions likely are not set - just execute this command in PowerShell
+        - `Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser`
     - The online docs for PowerShell and the Azure CLI are very good
