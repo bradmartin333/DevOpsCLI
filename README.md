@@ -1,4 +1,4 @@
-# DevOpsCLI
+# DevOpsCLI 💻
 Follow these steps to get to automating Azure DevOps
 
 ## Generate a new token
@@ -28,9 +28,9 @@ Follow these steps to get to automating Azure DevOps
     - `az boards work-item show --id 27856`
 9. If a long return string is printed, then Azure CLI is all set up!
 
-## Automation!
+## Automation 🚀
 
-#### This repo
+### This Repo
 
 ![cli](https://user-images.githubusercontent.com/19335151/183495833-df1387a7-b0a8-46a3-9144-90f3477b6f81.png)
 
@@ -39,7 +39,7 @@ Follow these steps to get to automating Azure DevOps
     - If an exception occurs and the program exits, it is likely that the earlier steps were not completed or not enough time has elapsed since the creation of the work item ID
 - Clone the repo and tinker as needed with the aid of the [Azure CLI docs online](https://docs.microsoft.com/en-us/cli/azure/boards?view=azure-cli-latest)
 
-#### PowerShell ❤
+### PowerShell ❤
 
 All Windows 10 computers have PowerShell and PowerShell ISE
 - Also, [all operating systems can install PowerShell](https://github.com/PowerShell/PowerShell)
