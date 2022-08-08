@@ -41,4 +41,4 @@ Follow these steps to get to automating Azure DevOps
 - The same operations performed by [the .exe in this repo](https://github.com/bradmartin333/DevOpsCLI/raw/master/DevOpsCLI/bin/Release/DevOpsCLI.exe) can be performed and tinkered with using [this powershell script](https://github.com/bradmartin333/DevOpsCLI/blob/master/MakeTasks.ps1)
     - GitHub files can be saved by right clicking the "Raw" button in the top right of the file then clicking "Save link as..."
     - Save that file locally, right click it, then click "Run with PowerShell" and enter the User Story ID when prompted
-    - Or, open that file in PowerShell ISE to tinker with it (Lots of great PowerShell resources online, it is a really cool tool)
+    - Or, open that file in PowerShell ISE (I recommend making this the deafult app for opening .ps1 files) to tinker with it (Lots of great PowerShell resources online, it is a really cool tool)
