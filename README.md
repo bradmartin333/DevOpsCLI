@@ -39,5 +39,7 @@ Follow these steps to get to automating Azure DevOps
 
 ## I want more control!
 - All Windows 10 computers have PowerShell and PowerShell ISE
-- All operating systems can install PowerShell
+    - All operating systems can install PowerShell
 - The same operations performed by [the .exe in this repo](https://github.com/bradmartin333/DevOpsCLI/raw/master/DevOpsCLI/bin/Release/DevOpsCLI.exe) can be performed and tinkered with using [this powershell script](https://github.com/bradmartin333/DevOpsCLI/blob/master/MakeTasks.ps1)
+    - Save that file locally, right click it, then click "Run with PowerShell" and enter the User Story ID when prompted
+    - Or, save that file locally then open in the PowerShell ISE to tinker with it
