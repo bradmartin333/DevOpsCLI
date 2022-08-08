@@ -36,3 +36,8 @@ Follow these steps to get to automating Azure DevOps
 ## What does this repo do (Latest version)?
 - Create hardcoded child tasks for existing work item
 - Lots of room to grow
+
+## I want more control!
+- All Windows 10 computers have PowerShell and PowerShell ISE
+- All operating systems can install PowerShell
+- The same operations performed by [the .exe in this repo](https://github.com/bradmartin333/DevOpsCLI/raw/master/DevOpsCLI/bin/Release/DevOpsCLI.exe) can be performed and tinkered with using [this powershell script](https://github.com/bradmartin333/DevOpsCLI/blob/master/MakeTasks.ps1)
