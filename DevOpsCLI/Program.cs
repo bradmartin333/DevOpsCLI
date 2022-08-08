@@ -1,9 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 
 namespace DevOpsCLI
 {
@@ -11,16 +7,43 @@ namespace DevOpsCLI
     {
         //public static readonly string Project = "Hardware"; // For debugging
         public static readonly string Project = "Software";
-        private static readonly System.Timers.Timer Timer = new System.Timers.Timer(5000); // Give user 5 second delay to cancel
-        private static readonly List<string> NewIDs = new List<string>();
-        private static CancellationTokenSource TokenSource;
-        private static string UserName, UserStoryTitle, StoryPoints, Area;
-        private static string[] Tasks;
+        private static NewTask[] Tasks;
 
         [STAThread]
         static void Main(string[] args)
         {
-            Timer.Elapsed += Timer_Elapsed;
+            PrintHeader();
+            MakeTasks();
+
+            while (true)
+            {
+                Console.WriteLine("Enter a User Story ID to create standard child tasks (Right click to paste)");
+                Console.Write("\n> ");
+                string entry = Console.ReadLine();
+                if (long.TryParse(entry, out _))
+                {
+                    WorkItem workItem = Azure.GetWorkItem(entry);
+                    if (workItem.IsValid())
+                    {
+                        Console.WriteLine($"Creating standard child tasks for {workItem.Title}...");
+                        for (int i = 0; i < Tasks.Length; i++)
+                        {
+                            Tasks[i].ID = Azure.CreateWorkItem(Tasks[i].Title, Tasks[i].Assignee, workItem.AreaID);
+                            Azure.AssignParent(Tasks[i].ID, workItem.ID);
+                            Console.WriteLine(Tasks[i].ID);
+                        }
+                    }
+                    else
+                        Console.WriteLine("Invalid work item ID");
+                }
+                else
+                    Console.WriteLine("Invalid work item ID");
+                Console.WriteLine("\n");
+            }
+        }
+
+        private static void PrintHeader()
+        {
             Console.ForegroundColor = ConsoleColor.Green;
             Console.WriteLine(" ____              ___             ____ _     ___ ");
             Console.WriteLine("|  _ \\  _____   __/ _ \\ _ __  ___ / ___| |   |_ _|");
@@ -29,163 +52,19 @@ namespace DevOpsCLI
             Console.WriteLine("|____/ \\___| \\_/  \\___/| .__/|___/\\____|_____|___|");
             Console.Write("                       |_|                    ");
             Console.ResetColor();
-            Console.WriteLine("v0.1");
-            Console.WriteLine("Fetching names...");
-            Azure.GetNames();
-            Console.WriteLine("Fetching project areas...");
-            Azure.GetAreas();
-
-            while (true)
-            {
-                Console.WriteLine("Awaiting user input...");
-                TokenSource = new CancellationTokenSource();
-                NewIDs.Clear();
-
-                bool run = true;
-                using (UserEntry userEntry = new UserEntry())
-                {
-                    DialogResult result = userEntry.ShowDialog();
-                    if (result == DialogResult.OK)
-                    {
-                        UserName = userEntry.UserName;
-                        UserStoryTitle = userEntry.UserStoryTitle;
-                        StoryPoints = userEntry.StoryPoints;
-                        Area = Azure.AreaIDs[Azure.Areas.IndexOf(userEntry.Area)];
-                        Tasks = userEntry.Tasks.ToList().Where(x => !string.IsNullOrEmpty(x)).ToArray();
-                    }
-                    else
-                    {
-                        Console.Write("No task run");
-                        run = false;
-                    }
-                }
-
-                if (run)
-                {
-                    Console.WriteLine($"\nCreating a user story for {UserName} named \"{UserStoryTitle}\"");
-                    Console.WriteLine($"in the {Project} project{(Tasks.Length > 0 ? $" with {Tasks.Length} custom child tasks" : "")}");
-                    Console.ForegroundColor = ConsoleColor.DarkYellow;
-                    Console.WriteLine($"\nPress any key to cancel");
-                    Console.ResetColor();
-                    Timer.Start();
-                    ConsoleKeyInfo end = Console.ReadKey();
-                    TokenSource.Cancel();
-                    Timer.Stop();
-                }
-
-                Console.WriteLine("\n");
-                if (NewIDs.Count > 0) Console.WriteLine($"{NewIDs.Count} new IDs have been created.");
-
-                Console.ForegroundColor = ConsoleColor.Blue;
-                Console.WriteLine("Press 'r' to run again");
-                Console.WriteLine("Press 'd' to delete any newly created IDs and run again");
-                Console.WriteLine($"Press 's' to view grouped story points for the active sprints in the {Project} project");
-                Console.WriteLine("Press any other key to quit");
-                Console.ResetColor();
-
-                ConsoleKeyInfo input = Console.ReadKey();
-                Console.WriteLine("\n");
-                switch (input.KeyChar)
-                {
-                    case 'r':
-                        break;
-                    case 'd':
-                        Console.WriteLine("Press d again to confirm deletion");
-                        ConsoleKeyInfo confirm = Console.ReadKey();
-                        Console.WriteLine("\n");
-                        if (confirm.KeyChar == 'd')
-                        {
-                            Console.BackgroundColor = ConsoleColor.DarkMagenta;
-                            Console.WriteLine($"Deleting {NewIDs.Count} items...");
-                            int deleteCount = 0;
-                            foreach (string id in NewIDs)
-                                deleteCount += Azure.DeleteWorkItem(id, Project);
-                            Console.WriteLine($"Deleted {deleteCount} items\n");
-                            Console.ResetColor();
-                        }
-                        break;
-                    case 's':
-                        Console.WriteLine("Fetching data...\n");
-                        Azure.StoryPoints();
-                        int padSize = Azure.StoryPointDict.Select(x => x.Key.Length).Max() + 2;
-                        bool toggleColor = false;
-                        foreach (KeyValuePair<string, int> item in Azure.StoryPointDict)
-                        {
-                            if (toggleColor)
-                            {
-                                Console.ForegroundColor = ConsoleColor.Black;
-                                Console.BackgroundColor = ConsoleColor.Gray;
-                            }
-                            else
-                                Console.ResetColor();
-                            Console.Write($"{item.Key.PadRight(padSize)}\t{item.Value,-5}");
-                            for (int i = 0; i < item.Value; i++)
-                                Console.Write("*");
-                            Console.WriteLine();
-                            toggleColor = !toggleColor;
-                        }
-                        Console.ResetColor();
-                        Console.WriteLine("\nPress any key to restart");
-                        Console.ReadKey();
-                        Console.WriteLine("\n");
-                        break;
-                    default:
-                        return;
-                }
-            }
+            Console.WriteLine("v0.2\n");
         }
 
-        private static void Timer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
+        private static void MakeTasks()
         {
-            Console.WriteLine("\n--- Task Started ---\n");
-            Timer.Stop();
-
-            CancellationToken token = TokenSource.Token;
-
-            Task Task = Task.Factory.StartNew(() =>
+            Tasks = new List<NewTask>
             {
-                if (token.IsCancellationRequested) return;
-                string userStoryID = Azure.CreateWorkItem(UserName, UserStoryTitle, "User Story", Area, StoryPoints);
-                Console.WriteLine($"Created User Story {userStoryID}");
-                if (string.IsNullOrEmpty(userStoryID))
-                {
-                    Console.WriteLine("Failed to create user story\nCancelling...\nPress any key to continue");
-                    return;
-                }
-                NewIDs.Add(userStoryID);
-
-                for (int i = 0; i < Tasks.Length; i++)
-                {
-                    if (token.IsCancellationRequested) return;
-                    string taskID = Azure.CreateWorkItem(UserName, Tasks[i], "Task", Area);
-                    if (string.IsNullOrEmpty(taskID))
-                    {
-                        Console.WriteLine("Failed to create user story\nCancelling...");
-                        return;
-                    }
-                    NewIDs.Add(taskID);
-                    Console.WriteLine($"Created Task {taskID}");
-                    if (token.IsCancellationRequested) return;
-                    Azure.AssignParent(taskID, userStoryID);
-                }
-
-                Console.WriteLine("\nTask Complete\nPress any key to continue");
-            },
-            token);
-
-            // Dummy task for debugging
-            //Task Task = Task.Factory.StartNew(() =>
-            //{
-            //    for (int i = 0; i < 50; i++)
-            //    {
-            //        if (token.IsCancellationRequested) return;
-            //        Console.WriteLine(i);
-            //        NewIDs.Add(i.ToString());
-            //        Thread.SpinWait(10000000);
-            //    }
-            //    Console.WriteLine("\nTask Complete\nPress any key to continue");
-            //},
-            //token);
+                new NewTask() { Title = "Design Created & Reviewed" },
+                new NewTask() { Title = "Code & Code Review" },
+                new NewTask() { Title = "Test Plan Developed & Reviewed" },
+                new NewTask() { Title = "Test Cases Executed & Passed" },
+                new NewTask() { Title = "PO Acceptance", Assignee = "tjenkins@parata.com" },
+            }.ToArray();
         }
     }
 }
