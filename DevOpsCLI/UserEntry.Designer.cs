@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(UserEntry));
             this.ComboNames = new System.Windows.Forms.ComboBox();
             this.TLP = new System.Windows.Forms.TableLayoutPanel();
             this.LabelAssignedUser = new System.Windows.Forms.Label();
@@ -302,7 +303,8 @@
             this.ClientSize = new System.Drawing.Size(321, 348);
             this.Controls.Add(this.TLP);
             this.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.SizableToolWindow;
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "UserEntry";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
