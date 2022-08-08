@@ -57,12 +57,6 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
-    <Compile Include="UserEntry.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="UserEntry.Designer.cs">
-      <DependentUpon>UserEntry.cs</DependentUpon>
-    </Compile>
     <Compile Include="WorkItem.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -71,11 +65,6 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="UserEntry.resx">
-      <DependentUpon>UserEntry.cs</DependentUpon>
-    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <Content Include="azure-devops.ico" />

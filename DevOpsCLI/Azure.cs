@@ -79,10 +79,24 @@ namespace DevOpsCLI
             }
         }
 
-        #region Old
+        public static void AssignParent(string childID, string parentID)
+        {
+            var proc = new Process
+            {
+                StartInfo = new ProcessStartInfo
+                {
+                    FileName = @"C:\Windows\system32\WindowsPowerShell\v1.0\powershell.exe",
+                    Arguments = $"az boards work-item relation add --id {childID} --relation-type parent --target-id {parentID}",
+                    UseShellExecute = false,
+                    RedirectStandardOutput = false,
+                    CreateNoWindow = true,
+                    WorkingDirectory = @"C:\",
+                }
+            };
 
-        public static readonly List<string> Areas = new List<string>();
-        public static readonly List<string> AreaIDs = new List<string>();
+            proc.Start();
+            proc.WaitForExit();
+        }
 
         public static int DeleteWorkItem(string id, string project)
         {
@@ -113,65 +127,6 @@ namespace DevOpsCLI
                 return 0;
             }
         }
-
-        public static void AssignParent(string childID, string parentID)
-        {
-            var proc = new Process
-            {
-                StartInfo = new ProcessStartInfo
-                {
-                    FileName = @"C:\Windows\system32\WindowsPowerShell\v1.0\powershell.exe",
-                    Arguments = $"az boards work-item relation add --id {childID} --relation-type parent --target-id {parentID}",
-                    UseShellExecute = false,
-                    RedirectStandardOutput = false,
-                    CreateNoWindow = true,
-                    WorkingDirectory = @"C:\",
-                }
-            };
-
-            proc.Start();
-            proc.WaitForExit();
-        }
-
-        public static void GetAreas()
-        {
-            var proc = new Process
-            {
-                StartInfo = new ProcessStartInfo
-                {
-                    FileName = @"C:\Windows\system32\WindowsPowerShell\v1.0\powershell.exe",
-                    Arguments = $"az boards area project list --project {Program.Project}",
-                    UseShellExecute = false,
-                    RedirectStandardOutput = true,
-                    CreateNoWindow = true,
-                    WorkingDirectory = @"C:\",
-                }
-            };
-
-            proc.OutputDataReceived += AreaDataReceived; // Async gather areas
-            proc.Start();
-            proc.BeginOutputReadLine();
-            proc.WaitForExit();
-        }
-
-        private static void AreaDataReceived(object sender, DataReceivedEventArgs e)
-        {
-            if (e.Data != null)
-            {
-                if (e.Data.Contains("path"))
-                {
-                    string area = e.Data.Split('\"')[3]; // Assumes consistent output
-                    if (!Areas.Contains(area)) Areas.Add(area); // One way to have no duplicates
-                }
-                else if (e.Data.Contains("\"id\""))
-                {
-                    string id = e.Data.Split(' ').Last().Replace(",", ""); // Assumes consistent output
-                    if (!AreaIDs.Contains(id)) AreaIDs.Add(id); // One way to have no duplicates
-                }
-            }
-        }
-
-        #endregion
 
         #region Story Points
 
