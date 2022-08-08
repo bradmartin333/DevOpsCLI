@@ -8,11 +8,13 @@ namespace DevOpsCLI
     {
         //public static readonly string Project = "Hardware"; // For debugging
         public static readonly string Project = "Software";
+        private static NewTask[] Tasks;
 
         [STAThread]
         static void Main(string[] args)
         {
             PrintHeader();
+            MakeTasks();
 
             while (true)
             {
@@ -28,6 +30,12 @@ namespace DevOpsCLI
                     if (workItem.IsValid())
                     {
                         Console.WriteLine($"Creating standard child tasks for {workItem.Title}...");
+                        for (int i = 0; i < Tasks.Length; i++)
+                        {
+                            Tasks[i].ID = Azure.CreateWorkItem(Tasks[i].Title, Tasks[i].Assignee, workItem.AreaID);
+                            Azure.AssignParent(Tasks[i].ID, workItem.ID);
+                            Console.WriteLine(Tasks[i].ID);
+                        }
                     }
                     else
                         Console.WriteLine("Invalid work item ID");
@@ -47,6 +55,18 @@ namespace DevOpsCLI
             Console.Write("                       |_|                    ");
             Console.ResetColor();
             Console.WriteLine("v0.2\n");
+        }
+
+        private static void MakeTasks()
+        {
+            Tasks = new List<NewTask>
+            {
+                new NewTask() { Title = "Design Created & Reviewed" },
+                new NewTask() { Title = "Code & Code Review" },
+                new NewTask() { Title = "Test Plan Developed & Reviewed" },
+                new NewTask() { Title = "Test Cases Executed & Passed" },
+                new NewTask() { Title = "PO Acceptance", Assignee = "tjenkins@parata.com.com" },
+            }.ToArray();
         }
 
         private static void StoryPointPlot()

@@ -39,21 +39,16 @@ namespace DevOpsCLI
             WorkItemData += $"{e.Data}\n";
         }
 
-        #region Old
-
-        public static readonly List<string> Areas = new List<string>();
-        public static readonly List<string> AreaIDs = new List<string>();
-
-        public static string CreateWorkItem(string assignee, string title, string type, string area, string storyPoints = null)
+        public static string CreateWorkItem(string title, string assignee, string area, string type = "Task", string storyPoints = null)
         {
             string arg = $"az boards work-item create " +
                          $"--title \\\"{title}\\\" " +
-                         $"--type \\\"{type}\\\" " +
-                         $"--assigned-to \\\"{assignee}\\\" " +
                          $"--project \\\"{Program.Project}\\\" " +
                          $"--reason \\\"New\\\" " +
                          $"--fields \\\"Area ID={area}\\\" " +
-                         $"{(string.IsNullOrEmpty(storyPoints) ? "" : $"\\\"Story Points={storyPoints}\\\"")} " +
+                         $"--type \\\"{type}\\\" " +
+                         $"{(string.IsNullOrEmpty(assignee) ? "" : $"--assigned-to \\\"{assignee}\\\" ")}" +
+                         $"{(string.IsNullOrEmpty(storyPoints) ? "" : $"\\\"Story Points={storyPoints}\\\" ")}" +
                          $"--output tsv";
 
             var proc = new Process
@@ -83,6 +78,11 @@ namespace DevOpsCLI
                 return null;
             }
         }
+
+        #region Old
+
+        public static readonly List<string> Areas = new List<string>();
+        public static readonly List<string> AreaIDs = new List<string>();
 
         public static int DeleteWorkItem(string id, string project)
         {
