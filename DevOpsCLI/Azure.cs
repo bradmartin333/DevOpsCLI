@@ -7,8 +7,7 @@ namespace DevOpsCLI
 {
     public class Azure
     {
-        public static readonly List<string> Names = new List<string>();
-        public static readonly List<string> PrincipalNames = new List<string>();
+        
         public static readonly List<string> Areas = new List<string>();
         public static readonly List<string> AreaIDs = new List<string>();
 
@@ -101,45 +100,6 @@ namespace DevOpsCLI
             proc.WaitForExit();
         }
 
-        public static void GetNames()
-        {
-            // Hardcoded to obtain the top 1000
-            var proc = new Process
-            {
-                StartInfo = new ProcessStartInfo
-                {
-                    FileName = @"C:\Windows\system32\WindowsPowerShell\v1.0\powershell.exe",
-                    Arguments = $"az devops user list --top 1000",
-                    UseShellExecute = false,
-                    RedirectStandardOutput = true,
-                    CreateNoWindow = true,
-                    WorkingDirectory = @"C:\",
-                }
-            };
-
-            proc.OutputDataReceived += NameDataReceived; // Async gather names
-            proc.Start();
-            proc.BeginOutputReadLine();
-            proc.WaitForExit();
-        }
-
-        private static void NameDataReceived(object sender, DataReceivedEventArgs e)
-        {
-            if (e.Data != null)
-            {
-                if (e.Data.Contains("displayName"))
-                {
-                    string name = e.Data.Split('\"')[3]; // Assumes consistent output
-                    if (!Names.Contains(name)) Names.Add(name); // One way to have no duplicates
-                }
-                else if (e.Data.Contains("principalName"))
-                {
-                    string prinicpalName = e.Data.Split('\"')[3]; // Assumes consistent output
-                    if (!PrincipalNames.Contains(prinicpalName)) PrincipalNames.Add(prinicpalName); // One way to have no duplicates
-                }
-            }
-        }
-
         public static void GetAreas()
         {
             var proc = new Process
@@ -181,9 +141,12 @@ namespace DevOpsCLI
         #region Story Points
 
         public static Dictionary<string, int> StoryPointDict = new Dictionary<string, int>();
+        public static readonly List<string> Names = new List<string>();
+        public static readonly List<string> PrincipalNames = new List<string>();
 
         public static void StoryPoints()
         {
+            GetNames();
             StoryPointDict = new Dictionary<string, int>();
 
             var proc = new Process
@@ -226,6 +189,45 @@ namespace DevOpsCLI
                         StoryPointDict[name] += num;
                     else
                         StoryPointDict[name] = num;
+                }
+            }
+        }
+
+        public static void GetNames()
+        {
+            // Hardcoded to obtain the top 1000
+            var proc = new Process
+            {
+                StartInfo = new ProcessStartInfo
+                {
+                    FileName = @"C:\Windows\system32\WindowsPowerShell\v1.0\powershell.exe",
+                    Arguments = $"az devops user list --top 1000",
+                    UseShellExecute = false,
+                    RedirectStandardOutput = true,
+                    CreateNoWindow = true,
+                    WorkingDirectory = @"C:\",
+                }
+            };
+
+            proc.OutputDataReceived += NameDataReceived; // Async gather names
+            proc.Start();
+            proc.BeginOutputReadLine();
+            proc.WaitForExit();
+        }
+
+        private static void NameDataReceived(object sender, DataReceivedEventArgs e)
+        {
+            if (e.Data != null)
+            {
+                if (e.Data.Contains("displayName"))
+                {
+                    string name = e.Data.Split('\"')[3]; // Assumes consistent output
+                    if (!Names.Contains(name)) Names.Add(name); // One way to have no duplicates
+                }
+                else if (e.Data.Contains("principalName"))
+                {
+                    string prinicpalName = e.Data.Split('\"')[3]; // Assumes consistent output
+                    if (!PrincipalNames.Contains(prinicpalName)) PrincipalNames.Add(prinicpalName); // One way to have no duplicates
                 }
             }
         }
