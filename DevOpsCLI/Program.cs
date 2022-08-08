@@ -5,7 +5,6 @@ namespace DevOpsCLI
 {
     internal class Program
     {
-        //public static readonly string Project = "Hardware"; // For debugging
         public static readonly string Project = "Software";
         private static List<NewTask> Tasks;
 
@@ -32,7 +31,7 @@ namespace DevOpsCLI
                     WorkItem workItem = Azure.GetWorkItem(entry);
                     if (workItem.IsValid())
                     {
-                        Console.WriteLine($"\nCreating standard child tasks for {workItem.Title}...");
+                        Console.WriteLine($"\nCreating child tasks for \"{workItem.Title}\"...");
                         for (int i = 0; i < Tasks.Count; i++)
                         {
                             Tasks[i].ID = Azure.CreateWorkItem(Tasks[i].Title, Tasks[i].Assignee, workItem.AreaID, workItem.IterationPath);
@@ -66,7 +65,7 @@ namespace DevOpsCLI
         private static void PrintPrompt()
         {
             Console.ForegroundColor = ConsoleColor.DarkYellow;
-            Console.WriteLine("\nEnter a User Story ID to create standard child tasks (Right click to paste)");
+            Console.WriteLine("\nEnter a User Story ID to create standard child tasks\n(Right click to paste)");
             Console.ResetColor();
             Console.Write("\n> ");
         }
