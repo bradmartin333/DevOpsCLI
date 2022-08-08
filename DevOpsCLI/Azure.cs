@@ -38,15 +38,16 @@ namespace DevOpsCLI
             WorkItemData += $"{e.Data}\n";
         }
 
-        public static string CreateWorkItem(string title, string assignee, string area, string type = "Task", string storyPoints = null)
+        public static string CreateWorkItem(string title, string assignee, string area, string iteration = null,  string type = "Task", string storyPoints = null)
         {
             string arg = $"az boards work-item create " +
                          $"--title \\\"{title}\\\" " +
                          $"--project \\\"{Program.Project}\\\" " +
                          $"--reason \\\"New\\\" " +
-                         $"--fields \\\"Area ID={area}\\\" " +
                          $"--type \\\"{type}\\\" " +
                          $"{(string.IsNullOrEmpty(assignee) ? "" : $"--assigned-to \\\"{assignee}\\\" ")}" +
+                         $"--fields \\\"Area ID={area}\\\" " +
+                         $"{(string.IsNullOrEmpty(iteration) ? "" : $"\\\"Iteration Path={iteration}\\\" ")}" +
                          $"{(string.IsNullOrEmpty(storyPoints) ? "" : $"\\\"Story Points={storyPoints}\\\" ")}" +
                          $"--output tsv";
 
