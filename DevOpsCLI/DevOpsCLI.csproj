@@ -62,6 +62,7 @@
     <Compile Include="UserEntry.Designer.cs">
       <DependentUpon>UserEntry.cs</DependentUpon>
     </Compile>
+    <Compile Include="WorkItem.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

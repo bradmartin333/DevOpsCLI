@@ -7,7 +7,40 @@ namespace DevOpsCLI
 {
     public class Azure
     {
-        
+        public static string WorkItemData { get; set; }
+
+        public static WorkItem GetWorkItem(string id)
+        {
+            WorkItemData = string.Empty;
+
+            var proc = new Process
+            {
+                StartInfo = new ProcessStartInfo
+                {
+                    FileName = @"C:\Windows\system32\WindowsPowerShell\v1.0\powershell.exe",
+                    Arguments = $"az boards work-item show --id {id}",
+                    UseShellExecute = false,
+                    RedirectStandardOutput = true,
+                    CreateNoWindow = true,
+                    WorkingDirectory = @"C:\",
+                }
+            };
+
+            proc.OutputDataReceived += WorkItemDataReceived; // Async gather lines
+            proc.Start();
+            proc.BeginOutputReadLine();
+            proc.WaitForExit();
+
+            return new WorkItem(WorkItemData);
+        }
+
+        private static void WorkItemDataReceived(object sender, DataReceivedEventArgs e)
+        {
+            WorkItemData += $"{e.Data}\n";
+        }
+
+        #region Old
+
         public static readonly List<string> Areas = new List<string>();
         public static readonly List<string> AreaIDs = new List<string>();
 
@@ -137,6 +170,8 @@ namespace DevOpsCLI
                 }
             }
         }
+
+        #endregion
 
         #region Story Points
 

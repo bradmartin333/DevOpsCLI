@@ -24,9 +24,15 @@ namespace DevOpsCLI
                     StoryPointPlot();
                 else
                 {
-
+                    WorkItem workItem = Azure.GetWorkItem(entry);
+                    if (workItem.IsValid())
+                    {
+                        Console.WriteLine($"Creating standard child tasks for {workItem.Title}...");
+                    }
+                    else
+                        Console.WriteLine("Invalid work item ID");
                 }
-                Console.WriteLine(entry);
+                Console.WriteLine("\n");
             }
         }
 
