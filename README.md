@@ -30,15 +30,21 @@ Follow these steps to get to automating Azure DevOps
 
 ## Automation!
 
+#### This repo
+
 ![cli](https://user-images.githubusercontent.com/19335151/183495833-df1387a7-b0a8-46a3-9144-90f3477b6f81.png)
 
 - Download and use the [included .exe](https://github.com/bradmartin333/DevOpsCLI/raw/master/DevOpsCLI/bin/Release/DevOpsCLI.exe) for the automation available currently in this repo
     - Right now, all it does is create hardcoded child tasks for a user determined work item
     - If an exception occurs and the program exits, it is likely that the earlier steps were not completed or not enough time has elapsed since the creation of the work item ID
 - Clone the repo and tinker as needed with the aid of the [Azure CLI docs online](https://docs.microsoft.com/en-us/cli/azure/boards?view=azure-cli-latest)
-- All Windows 10 computers have PowerShell and PowerShell ISE
-    - Also, [all operating systems can install PowerShell](https://github.com/PowerShell/PowerShell)
-    - The same operations performed by the .exe in this repo can be performed and tinkered with using [this powershell script](https://github.com/bradmartin333/DevOpsCLI/blob/master/MakeTasks.ps1)
-        - GitHub files can be saved by right clicking the "Raw" button in the top right of the file then clicking "Save link as..."
-        - Save that file locally, right click it, then click "Run with PowerShell" and enter the User Story ID when prompted
-        - Or, open that file in PowerShell ISE to tinker with it (I recommend making this the deafult app for opening .ps1 files)
+
+#### PowerShell ❤
+
+All Windows 10 computers have PowerShell and PowerShell ISE
+- Also, [all operating systems can install PowerShell](https://github.com/PowerShell/PowerShell)
+- The same operations performed by the .exe in this repo can be performed and tinkered with using [this powershell script](https://github.com/bradmartin333/DevOpsCLI/blob/master/MakeTasks.ps1)
+    - GitHub files can be saved by right clicking the "Raw" button in the top right of the file then clicking "Save link as..."
+    - Save that file locally, right click it, then click "Run with PowerShell" and enter the User Story ID when prompted
+    - Or, open that file in PowerShell ISE to tinker with it (I recommend making this the deafult app for opening .ps1 files)
+    - The online docs for PowerShell and the Azure CLI are very good
